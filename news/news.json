@@ -9,7 +9,8 @@
     "date": "2025-01-15",
     "title": "New project: data pipeline toolkit",
     "body": "Released an open-source toolkit for building lightweight, composable data pipelines in Python. Check it out on my GitHub.",
-    "link": "https://github.com/nickmayn"
+    "link": "https://github.com/nickmayn",
+    "image": "https://example.com/news-image.png"
   },
   {
     "date": "2024-11-10",
@@ -17,3 +18,4 @@
     "body": "Gave a short talk on building ML-powered APIs with FastAPI and Pydantic. Slides available on request."
   }
 ]
+

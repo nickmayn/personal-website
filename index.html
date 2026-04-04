@@ -229,6 +229,17 @@
       flex-wrap: wrap;
       margin-bottom: .2rem;
     }
+    .timeline-card-header-left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
+    .timeline-logo {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      object-fit: contain;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      padding: 3px;
+    }
     .timeline-title { font-weight: 700; font-size: .92rem; color: var(--text); }
     .timeline-period { font-size: .74rem; color: var(--muted); white-space: nowrap; padding-top: .1rem; }
     .timeline-company { font-size: .84rem; color: var(--accent); margin-bottom: .45rem; }
@@ -255,6 +266,21 @@
       transition: border-color .15s, transform .15s, box-shadow .15s;
     }
     .news-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(88,166,255,.09); }
+    .news-card-body-row {
+      display: flex;
+      gap: .9rem;
+      align-items: flex-start;
+    }
+    .news-card-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; }
+    .news-card-img {
+      width: 72px;
+      height: 72px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+    }
     .news-card-header { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
     .news-title { font-weight: 600; font-size: .93rem; color: var(--text); flex: 1; }
     .news-title a { color: inherit; text-decoration: none; }
@@ -1159,12 +1185,20 @@
         const titleHTML = item.link
           ? `<a href="${safeUrl(item.link)}" target="_blank" rel="noopener">${esc(item.title)}</a>`
           : esc(item.title);
+        const imgHTML = item.image
+          ? `<img class="news-card-img" src="${safeUrl(item.image)}" alt="${esc(item.title)}" loading="lazy" />`
+          : '';
         card.innerHTML = `
-          <div class="news-card-header">
-            <span class="news-title">${titleHTML}</span>
-            ${dateStr ? `<span class="news-date">${esc(dateStr)}</span>` : ''}
-          </div>
-          ${item.body ? `<p class="news-body">${esc(item.body)}</p>` : ''}`;
+          <div class="news-card-body-row">
+            <div class="news-card-text">
+              <div class="news-card-header">
+                <span class="news-title">${titleHTML}</span>
+                ${dateStr ? `<span class="news-date">${esc(dateStr)}</span>` : ''}
+              </div>
+              ${item.body ? `<p class="news-body">${esc(item.body)}</p>` : ''}
+            </div>
+            ${imgHTML}
+          </div>`;
         frag.appendChild(card);
       });
       newsList.appendChild(frag);
@@ -1189,12 +1223,18 @@
         const tagsHTML = (job.tags || []).length
           ? `<div class="timeline-tags">${job.tags.map(t => `<span class="timeline-tag">${esc(t)}</span>`).join('')}</div>`
           : '';
+        const logoHTML = job.logo
+          ? `<img class="timeline-logo" src="${safeUrl(job.logo)}" alt="${esc(job.company)} logo" loading="lazy" />`
+          : '';
         item.innerHTML = `
           <div class="timeline-dot${job.current ? ' current' : ''}"></div>
           <div class="timeline-card">
             <div class="timeline-card-header">
-              <span class="timeline-title">${esc(job.title)}</span>
-              ${job.period ? `<span class="timeline-period">${esc(job.period)}</span>` : ''}
+              <div class="timeline-card-header-left">
+                <span class="timeline-title">${esc(job.title)}</span>
+                ${job.period ? `<span class="timeline-period">${esc(job.period)}</span>` : ''}
+              </div>
+              ${logoHTML}
             </div>
             <div class="timeline-company">${esc(job.company)}</div>
             ${job.description ? `<p class="timeline-desc">${esc(job.description)}</p>` : ''}

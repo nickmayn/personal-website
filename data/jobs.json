@@ -13,6 +13,7 @@
     "period": "2022 – 2024",
     "description": "Developed and maintained ML-powered microservices, built data ingestion pipelines, and contributed to a full-stack React/Node.js product used by thousands of customers.",
     "tags": ["Python", "React", "Node.js", "Docker", "GCP"],
+    "logo": "https://example.com/logo.png",
     "current": false
   },
   {
@@ -24,3 +25,4 @@
     "current": false
   }
 ]
+
