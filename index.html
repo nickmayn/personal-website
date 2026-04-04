@@ -912,6 +912,7 @@
       frag.appendChild(c);
     });
     grid.appendChild(frag);
+    refreshSpotlightCards();
   }
 
   function populateLangFilter() {
@@ -974,6 +975,8 @@
       });
     });
 
+    refreshSpotlightCards();
+
     // Topic cloud — aggregate all unique topics
     const topicCounts = {};
     allRepos.forEach(r => {
@@ -1028,8 +1031,12 @@
   document.getElementById('lang-filter').addEventListener('change', renderProjects);
 
   // ── Magic-card spotlight: track mouse per card ───────────────
+  let _spotlightCards = [];
+  function refreshSpotlightCards() {
+    _spotlightCards = Array.from(document.querySelectorAll('.card, .tool-card'));
+  }
   document.addEventListener('mousemove', e => {
-    document.querySelectorAll('.card, .tool-card').forEach(card => {
+    _spotlightCards.forEach(card => {
       const r = card.getBoundingClientRect();
       card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
       card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
