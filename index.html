@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nick Mayn — Portfolio</title>
+  <title>Nick Maynard - Portfolio</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -167,7 +167,6 @@
       flex: 1;
       min-width: 0;
       padding: 2rem 2rem 4rem;
-      max-width: 960px;
     }
 
     /* ── Section headings ── */
@@ -438,14 +437,160 @@
     @media (max-width: 480px) {
       .about-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── Aurora animated background ── */
+    #aurora {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    #aurora span {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+    }
+    #aurora span:nth-child(1) {
+      width: 65vw; height: 65vw;
+      background: radial-gradient(circle, rgba(88,166,255,.14) 0%, transparent 70%);
+      top: -20%; left: -10%;
+      animation: aurora1 24s ease-in-out infinite;
+    }
+    #aurora span:nth-child(2) {
+      width: 55vw; height: 55vw;
+      background: radial-gradient(circle, rgba(167,139,250,.11) 0%, transparent 70%);
+      bottom: -15%; right: -10%;
+      animation: aurora2 30s ease-in-out infinite;
+    }
+    #aurora span:nth-child(3) {
+      width: 38vw; height: 38vw;
+      background: radial-gradient(circle, rgba(63,185,80,.07) 0%, transparent 70%);
+      top: 35%; left: 42%;
+      animation: aurora3 19s ease-in-out infinite;
+    }
+    @keyframes aurora1 {
+      0%,100% { transform: translate(0,0);         opacity:.12; }
+      33%      { transform: translate(8vw,7vh);    opacity:.18; }
+      66%      { transform: translate(3vw,13vh);   opacity:.09; }
+    }
+    @keyframes aurora2 {
+      0%,100% { transform: translate(0,0);          opacity:.10; }
+      40%      { transform: translate(-7vw,-9vh);  opacity:.16; }
+      70%      { transform: translate(4vw,-4vh);   opacity:.07; }
+    }
+    @keyframes aurora3 {
+      0%,100% { transform: translate(0,0);         opacity:.07; }
+      50%      { transform: translate(-8vw,6vh);   opacity:.12; }
+    }
+
+    /* Ensure layout sits above aurora */
+    .topbar { z-index: 100; }
+    .layout  { position: relative; z-index: 1; }
+
+    /* ── Magic-card spotlight (Inspira-UI style) ── */
+    .card, .tool-card {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .card::before, .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        380px circle at var(--mx, -300px) var(--my, -300px),
+        rgba(88,166,255,.18),
+        transparent 60%
+      );
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .card:hover::before, .tool-card:hover::before { opacity: 1; }
+    .card > *, .tool-card > * { position: relative; z-index: 1; }
+
+    /* ── Stat card animated hover glow ── */
+    .stat-card {
+      transition: box-shadow .3s, transform .2s;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 0 1px rgba(88,166,255,.35), 0 8px 28px rgba(88,166,255,.14);
+    }
+    /* Pulsing border glow on stat cards */
+    @keyframes stat-glow {
+      0%,100% { box-shadow: 0 0 8px rgba(88,166,255,.06); }
+      50%      { box-shadow: 0 0 22px rgba(88,166,255,.16); }
+    }
+    .stat-card { animation: stat-glow 4s ease-in-out infinite; }
+
+    /* ── Section entrance animation ── */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .section { animation: fadeSlideUp .55s cubic-bezier(.16,1,.3,1) both; }
+    #about    { animation-delay: .08s; }
+    #projects { animation-delay: .18s; }
+    #tools    { animation-delay: .28s; }
+
+    /* ── Project / tool card entrance ── */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px) scale(.98); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);   }
+    }
+    .card { animation: cardIn .4s cubic-bezier(.16,1,.3,1) both; }
+
+    /* ── Shimmer animation on section headings ── */
+    .section-header h2 {
+      background: linear-gradient(
+        90deg,
+        #ffffff 0%,
+        #c8d7ff 30%,
+        var(--accent2) 60%,
+        #ffffff 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: text-shimmer 6s linear infinite;
+    }
+    @keyframes text-shimmer {
+      0%   { background-position: 0%   center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ── Improved card hover (extra glow on top of border change) ── */
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 0 1px rgba(88,166,255,.25),
+                  0 10px 32px rgba(88,166,255,.14);
+    }
+    .tool-card:hover {
+      border-color: rgba(88,166,255,.5);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 20px rgba(88,166,255,.1);
+    }
   </style>
 </head>
 <body>
 
+<!-- Aurora animated background blobs -->
+<div id="aurora" aria-hidden="true">
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
 <!-- Mobile top bar -->
 <div class="topbar">
   <button class="hamburger" id="hamburger" aria-label="Open menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-  <span class="site-title">Nick Mayn</span>
+  <span class="site-title">Nick Maynard</span>
 </div>
 <div class="sidebar-overlay" id="overlay"></div>
 
@@ -761,8 +906,13 @@
     }
 
     const frag = document.createDocumentFragment();
-    list.forEach(r => frag.appendChild(buildCard(r)));
+    list.forEach((r, i) => {
+      const c = buildCard(r);
+      c.style.animationDelay = (i * 0.04) + 's';
+      frag.appendChild(c);
+    });
     grid.appendChild(frag);
+    refreshSpotlightCards();
   }
 
   function populateLangFilter() {
@@ -800,11 +950,12 @@
     const grid = document.getElementById('tools-grid');
     grid.innerHTML = '';
 
-    sorted.forEach(([lang, count]) => {
+    sorted.forEach(([lang, count], i) => {
       const color = LANG_COLORS[lang] || '#8b949e';
       const pct   = Math.round((count / maxCount) * 100);
       const card  = document.createElement('div');
       card.className = 'tool-card';
+      card.style.animationDelay = (i * 0.05) + 's';
       card.innerHTML = `
         <div class="tool-header">
           <span class="tool-dot" style="background:${color}"></span>
@@ -823,6 +974,8 @@
         el.style.width = el.dataset.pct + '%';
       });
     });
+
+    refreshSpotlightCards();
 
     // Topic cloud — aggregate all unique topics
     const topicCounts = {};
@@ -876,6 +1029,19 @@
   document.getElementById('search').addEventListener('input', renderProjects);
   document.getElementById('sort').addEventListener('change', renderProjects);
   document.getElementById('lang-filter').addEventListener('change', renderProjects);
+
+  // ── Magic-card spotlight: track mouse per card ───────────────
+  let _spotlightCards = [];
+  function refreshSpotlightCards() {
+    _spotlightCards = Array.from(document.querySelectorAll('.card, .tool-card'));
+  }
+  document.addEventListener('mousemove', e => {
+    _spotlightCards.forEach(card => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
+    });
+  });
 
   init();
 </script>
