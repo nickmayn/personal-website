@@ -8,20 +8,26 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0d1117;
-      --surface:  #161b22;
-      --surface2: #1c2128;
-      --border:   #30363d;
-      --accent:   #58a6ff;
-      --text:     #c9d1d9;
-      --muted:    #8b949e;
-      --green:    #3fb950;
-      --radius:   10px;
+      --bg:        #0d1117;
+      --surface:   #161b22;
+      --surface2:  #1c2128;
+      --border:    #30363d;
+      --accent:    #58a6ff;
+      --accent2:   #a78bfa;
+      --text:      #c9d1d9;
+      --muted:     #8b949e;
+      --green:     #3fb950;
+      --red:       #f85149;
+      --star:      #e3b341;
+      --radius:    10px;
       --sidebar-w: 260px;
+      --glow:      rgba(88,166,255,.15);
     }
 
     body {
-      background: var(--bg);
+      background: radial-gradient(ellipse at 20% 10%, rgba(88,166,255,.07) 0%, var(--bg) 55%),
+                  radial-gradient(ellipse at 80% 90%, rgba(167,139,250,.05) 0%, transparent 55%),
+                  var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       min-height: 100vh;
@@ -86,10 +92,23 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      border: 2px solid var(--border);
-      background: var(--border);
+      border: 2px solid transparent;
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+      animation: avatar-glow 3s ease-in-out infinite;
     }
-    .sidebar .profile .name { font-weight: 700; font-size: 1rem; color: #fff; }
+    @keyframes avatar-glow {
+      0%, 100% { box-shadow: 0 0 12px rgba(88,166,255,.18); }
+      50%       { box-shadow: 0 0 24px rgba(88,166,255,.35); }
+    }
+    .sidebar .profile .name {
+      font-weight: 700;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #fff 45%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .sidebar .profile .login { font-size: .8rem; color: var(--muted); }
     .sidebar .profile .bio-short {
       font-size: .8rem;
@@ -104,12 +123,17 @@
       font-size: .8rem;
       color: var(--accent);
       text-decoration: none;
-      border: 1px solid var(--border);
+      border: 1px solid transparent;
       border-radius: var(--radius);
       padding: .3rem .75rem;
-      transition: border-color .15s, background .15s;
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, rgba(88,166,255,.5), rgba(167,139,250,.3)) border-box;
+      transition: background .15s;
     }
-    .sidebar .profile a.gh-btn:hover { background: var(--surface2); border-color: var(--accent); }
+    .sidebar .profile a.gh-btn:hover {
+      background: linear-gradient(var(--surface2), var(--surface2)) padding-box,
+                  linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+    }
 
     /* Nav links */
     .sidebar nav { display: flex; flex-direction: column; gap: .25rem; }
@@ -125,8 +149,8 @@
       transition: background .12s, color .12s;
     }
     .sidebar nav a:hover { background: var(--surface2); color: var(--text); }
-    .sidebar nav a.active { background: rgba(88,166,255,.12); color: var(--accent); font-weight: 600; }
-    .sidebar nav a .nav-icon { font-size: 1rem; width: 1.2rem; text-align: center; }
+    .sidebar nav a.active { background: linear-gradient(90deg, rgba(88,166,255,.15), rgba(167,139,250,.07)); color: var(--accent); font-weight: 600; border-left: 2px solid var(--accent); padding-left: calc(.7rem - 2px); }
+    .sidebar nav a .nav-icon { width: 1rem; height: 1rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 
     .sidebar .sidebar-footer {
       margin-top: auto;
@@ -156,8 +180,25 @@
       padding-bottom: .75rem;
       border-bottom: 1px solid var(--border);
     }
-    .section-header h2 { font-size: 1.2rem; color: #fff; }
-    .section-header .section-icon { font-size: 1.15rem; }
+    .section-header h2 {
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, #fff 50%, rgba(200,215,255,.85));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(88,166,255,.2), rgba(167,139,250,.12));
+      border: 1px solid rgba(88,166,255,.25);
+      color: var(--accent);
+      flex-shrink: 0;
+    }
 
     /* ── About ── */
     .about-grid {
@@ -167,8 +208,9 @@
       margin-bottom: 1.25rem;
     }
     .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: linear-gradient(var(--surface2), var(--surface2)) padding-box,
+                  linear-gradient(135deg, rgba(88,166,255,.35), rgba(167,139,250,.18)) border-box;
+      border: 1px solid transparent;
       border-radius: var(--radius);
       padding: .9rem 1.1rem;
       display: flex;
@@ -176,10 +218,18 @@
       gap: .2rem;
     }
     .stat-card .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-    .stat-card .value { font-size: 1.4rem; font-weight: 700; color: #fff; }
+    .stat-card .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .about-bio {
-      background: var(--surface);
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
       border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
       border-radius: var(--radius);
       padding: 1rem 1.2rem;
       line-height: 1.7;
@@ -231,20 +281,20 @@
     /* ── Card grid ── */
     #grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: .9rem;
     }
     .card {
-      background: var(--surface);
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 1rem 1.1rem;
       display: flex;
       flex-direction: column;
       gap: .5rem;
-      transition: border-color .15s, transform .15s;
+      transition: border-color .15s, transform .15s, box-shadow .15s;
     }
-    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(88,166,255,.2), 0 8px 28px rgba(88,166,255,.1); }
     .card a.repo-name {
       color: var(--accent);
       font-weight: 600;
@@ -263,6 +313,7 @@
       align-items: center;
       margin-top: auto;
     }
+    .meta-icon { display: inline-flex; align-items: center; gap: 3px; }
     .lang-dot {
       display: inline-block;
       width: 10px; height: 10px;
@@ -309,18 +360,20 @@
     /* ── Tools section ── */
     .tools-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: .85rem;
     }
     .tool-card {
-      background: var(--surface);
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: .9rem 1rem;
       display: flex;
       flex-direction: column;
       gap: .5rem;
+      transition: border-color .15s, transform .15s, box-shadow .15s;
     }
+    .tool-card:hover { border-color: rgba(88,166,255,.4); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(88,166,255,.07); }
     .tool-card .tool-header {
       display: flex;
       align-items: center;
@@ -352,7 +405,10 @@
       font-size: .78rem;
       color: var(--text);
       padding: .2rem .65rem;
+      transition: border-color .15s, color .15s;
+      cursor: default;
     }
+    .topic-chip:hover { border-color: rgba(88,166,255,.4); color: var(--accent); }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -388,7 +444,7 @@
 
 <!-- Mobile top bar -->
 <div class="topbar">
-  <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+  <button class="hamburger" id="hamburger" aria-label="Open menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <span class="site-title">Nick Mayn</span>
 </div>
 <div class="sidebar-overlay" id="overlay"></div>
@@ -410,13 +466,13 @@
 
     <nav id="sidebar-nav">
       <a href="#about" class="active">
-        <span class="nav-icon">👤</span> About
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> About
       </a>
       <a href="#projects">
-        <span class="nav-icon">📁</span> Projects
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span> Projects
       </a>
       <a href="#tools">
-        <span class="nav-icon">🛠</span> Tools &amp; Languages
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Tools &amp; Languages
       </a>
     </nav>
 
@@ -431,7 +487,7 @@
     <!-- About -->
     <section class="section" id="about">
       <div class="section-header">
-        <span class="section-icon">👤</span>
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <h2>About</h2>
       </div>
       <div class="about-grid" id="about-stats">
@@ -454,7 +510,7 @@
       </div>
       <div class="about-bio">
         <!--
-          ✏️  EDIT THIS SECTION to customise your About text.
+          EDIT THIS SECTION to customise your About text.
               The GitHub bio above is fetched automatically.
         -->
         <p id="about-gh-bio"></p>
@@ -468,13 +524,13 @@
           <a href="https://github.com/nickmayn" target="_blank" rel="noopener" style="color:var(--accent)">GitHub</a>.
         </p>
       </div>
-      <p class="about-edit-hint">✏️ Edit the bio paragraph in <code>index.html</code> to personalize this section.</p>
+      <p class="about-edit-hint">Edit the bio paragraph in <code>index.html</code> to personalize this section.</p>
     </section>
 
     <!-- Projects -->
     <section class="section" id="projects">
       <div class="section-header">
-        <span class="section-icon">📁</span>
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
         <h2>Projects</h2>
       </div>
       <div class="proj-controls">
@@ -500,7 +556,7 @@
     <!-- Tools -->
     <section class="section" id="tools">
       <div class="section-header">
-        <span class="section-icon">🛠</span>
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
         <h2>Tools &amp; Languages</h2>
       </div>
       <div id="tools-status" class="spinner-wrap" style="display:none">
@@ -643,8 +699,8 @@
     const langHTML = repo.language
       ? `<span><span class="lang-dot" style="background:${color}"></span>${repo.language}</span>`
       : '';
-    const starsHTML  = repo.stargazers_count > 0 ? `<span>⭐ ${repo.stargazers_count}</span>` : '';
-    const forksHTML  = repo.forks_count > 0      ? `<span>🍴 ${repo.forks_count}</span>`      : '';
+    const starsHTML  = repo.stargazers_count > 0 ? `<span class="meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" style="fill:var(--star)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${repo.stargazers_count}</span>` : '';
+    const forksHTML  = repo.forks_count > 0      ? `<span class="meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"/><line x1="12" y1="12" x2="12" y2="15"/></svg> ${repo.forks_count}</span>` : '';
     const forkBadge  = repo.fork ? `<span class="fork-badge">fork</span>` : '';
     const topicsHTML = (repo.topics || []).length
       ? `<div class="topics">${repo.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}</div>`
@@ -807,7 +863,7 @@
       renderTools();
     } catch (err) {
       projStatus.innerHTML = `
-        <p style="color:#f85149">⚠️ Could not load projects from GitHub API.</p>
+        <p style="color:var(--red);display:flex;align-items:center;gap:.4rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Could not load projects from GitHub API.</p>
         <p style="margin-top:.4rem;font-size:.82rem">
           This site is hosted on GitHub Pages and fetches data live from the GitHub API.
           If you are viewing this file locally without a server, open a terminal in this
