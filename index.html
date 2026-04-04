@@ -152,15 +152,115 @@
     .sidebar nav a.active { background: linear-gradient(90deg, rgba(88,166,255,.15), rgba(167,139,250,.07)); color: var(--accent); font-weight: 600; border-left: 2px solid var(--accent); padding-left: calc(.7rem - 2px); }
     .sidebar nav a .nav-icon { width: 1rem; height: 1rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 
-    .sidebar .sidebar-footer {
-      margin-top: auto;
-      font-size: .75rem;
+    /* ── Subsection heading ── */
+    .subsection-title {
+      font-size: .8rem;
       color: var(--muted);
-      text-align: center;
-      line-height: 1.5;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin: 1.75rem 0 .9rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
     }
-    .sidebar .sidebar-footer a { color: var(--muted); }
-    .sidebar .sidebar-footer a:hover { color: var(--text); }
+
+    /* ── Timeline (Inspira-UI inspired) ── */
+    .timeline {
+      position: relative;
+      padding: .25rem 0;
+    }
+    .timeline-line {
+      position: absolute;
+      left: 15px;
+      top: 4px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent 90%);
+      opacity: .35;
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 44px;
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 8px rgba(88,166,255,.35);
+      z-index: 1;
+    }
+    .timeline-dot.current {
+      background: var(--accent);
+      animation: dot-pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(88,166,255,.5); }
+      50%      { box-shadow: 0 0 0 7px rgba(88,166,255,0); }
+    }
+    .timeline-card {
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .9rem 1.1rem;
+      transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .timeline-card:hover {
+      border-color: rgba(88,166,255,.45);
+      box-shadow: 0 4px 20px rgba(88,166,255,.1);
+      transform: translateX(3px);
+    }
+    .timeline-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: .2rem;
+    }
+    .timeline-title { font-weight: 700; font-size: .92rem; color: var(--text); }
+    .timeline-period { font-size: .74rem; color: var(--muted); white-space: nowrap; padding-top: .1rem; }
+    .timeline-company { font-size: .84rem; color: var(--accent); margin-bottom: .45rem; }
+    .timeline-desc { font-size: .84rem; color: var(--muted); line-height: 1.6; }
+    .timeline-tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .55rem; }
+    .timeline-tag {
+      background: rgba(167,139,250,.12);
+      color: var(--accent2);
+      border-radius: 20px;
+      font-size: .7rem;
+      padding: .12rem .5rem;
+    }
+
+    /* ── News section ── */
+    .news-list { display: flex; flex-direction: column; gap: .85rem; }
+    .news-card {
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+      transition: border-color .15s, transform .15s, box-shadow .15s;
+    }
+    .news-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(88,166,255,.09); }
+    .news-card-header { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
+    .news-title { font-weight: 600; font-size: .93rem; color: var(--text); flex: 1; }
+    .news-title a { color: inherit; text-decoration: none; }
+    .news-title a:hover { color: var(--accent); }
+    .news-date { font-size: .74rem; color: var(--muted); white-space: nowrap; }
+    .news-body { font-size: .84rem; color: var(--muted); line-height: 1.55; }
 
     /* ── Main content ── */
     .content {
@@ -534,8 +634,9 @@
     }
     .section { animation: fadeSlideUp .55s cubic-bezier(.16,1,.3,1) both; }
     #about    { animation-delay: .08s; }
-    #projects { animation-delay: .18s; }
-    #tools    { animation-delay: .28s; }
+    #news     { animation-delay: .14s; }
+    #projects { animation-delay: .20s; }
+    #tools    { animation-delay: .30s; }
 
     /* ── Project / tool card entrance ── */
     @keyframes cardIn {
@@ -613,6 +714,9 @@
       <a href="#about" class="active">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> About
       </a>
+      <a href="#news">
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8z"/></svg></span> News
+      </a>
       <a href="#projects">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span> Projects
       </a>
@@ -621,9 +725,6 @@
       </a>
     </nav>
 
-    <div class="sidebar-footer">
-      <p>Auto-updated daily via<br><a href="https://github.com/nickmayn/personal-website/actions" target="_blank" rel="noopener">GitHub Actions</a></p>
-    </div>
   </aside>
 
   <!-- ── Main content ── -->
@@ -669,7 +770,26 @@
           <a href="https://github.com/nickmayn" target="_blank" rel="noopener" style="color:var(--accent)">GitHub</a>.
         </p>
       </div>
-      <p class="about-edit-hint">Edit the bio paragraph in <code>index.html</code> to personalize this section.</p>
+      <p class="about-edit-hint">Edit the bio paragraph and <code>data/jobs.json</code> to personalize this section.</p>
+
+      <h3 class="subsection-title">Career History</h3>
+      <div class="timeline" id="timeline">
+        <div class="timeline-line"></div>
+        <!-- items injected by JS from data/jobs.json -->
+      </div>
+    </section>
+
+    <!-- News -->
+    <section class="section" id="news">
+      <div class="section-header">
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8z"/></svg></span>
+        <h2>News</h2>
+      </div>
+      <div id="news-status" class="spinner-wrap">
+        <div class="spinner"></div>
+        <p>Loading news…</p>
+      </div>
+      <div class="news-list" id="news-list"></div>
     </section>
 
     <!-- Projects -->
@@ -754,7 +874,7 @@
 
   // ── Active nav on scroll ─────────────────────────────────
   const navLinks = document.querySelectorAll('#sidebar-nav a');
-  const sections = ['about', 'projects', 'tools'].map(id => document.getElementById(id));
+  const sections = ['about', 'news', 'projects', 'tools'].map(id => document.getElementById(id));
 
   function updateActiveNav() {
     let current = sections[0].id;
@@ -1000,6 +1120,102 @@
     }
   }
 
+  // ── HTML escape helper ────────────────────────────────────
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+  function safeUrl(url) {
+    try {
+      const u = new URL(url);
+      return (u.protocol === 'https:' || u.protocol === 'http:') ? esc(url) : '#';
+    } catch (_) { return '#'; }
+  }
+
+  // ── Fetch and render news ─────────────────────────────────
+  async function fetchNews() {
+    const newsStatus = document.getElementById('news-status');
+    const newsList   = document.getElementById('news-list');
+    try {
+      const res = await fetch('news/news.json');
+      if (!res.ok) throw new Error('not found');
+      const items = await res.json();
+      newsStatus.style.display = 'none';
+      if (!items.length) {
+        newsList.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No news yet. Add entries to <code>news/news.json</code>.</p>';
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'news-card';
+        const dateStr = item.date
+          ? new Date(item.date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+          : '';
+        const titleHTML = item.link
+          ? `<a href="${safeUrl(item.link)}" target="_blank" rel="noopener">${esc(item.title)}</a>`
+          : esc(item.title);
+        card.innerHTML = `
+          <div class="news-card-header">
+            <span class="news-title">${titleHTML}</span>
+            ${dateStr ? `<span class="news-date">${esc(dateStr)}</span>` : ''}
+          </div>
+          ${item.body ? `<p class="news-body">${esc(item.body)}</p>` : ''}`;
+        frag.appendChild(card);
+      });
+      newsList.appendChild(frag);
+    } catch (_) {
+      newsStatus.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No news to display. Add entries to <code>news/news.json</code>.</p>';
+    }
+  }
+
+  // ── Fetch and render career timeline ─────────────────────
+  async function fetchTimeline() {
+    const timeline = document.getElementById('timeline');
+    if (!timeline) return;
+    try {
+      const res = await fetch('data/jobs.json');
+      if (!res.ok) throw new Error('not found');
+      const jobs = await res.json();
+      if (!jobs.length) return;
+      const frag = document.createDocumentFragment();
+      jobs.forEach(job => {
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        const tagsHTML = (job.tags || []).length
+          ? `<div class="timeline-tags">${job.tags.map(t => `<span class="timeline-tag">${esc(t)}</span>`).join('')}</div>`
+          : '';
+        item.innerHTML = `
+          <div class="timeline-dot${job.current ? ' current' : ''}"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <span class="timeline-title">${esc(job.title)}</span>
+              ${job.period ? `<span class="timeline-period">${esc(job.period)}</span>` : ''}
+            </div>
+            <div class="timeline-company">${esc(job.company)}</div>
+            ${job.description ? `<p class="timeline-desc">${esc(job.description)}</p>` : ''}
+            ${tagsHTML}
+          </div>`;
+        frag.appendChild(item);
+      });
+      timeline.appendChild(frag);
+      // Animate items in on scroll using IntersectionObserver
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      timeline.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+    } catch (_) { /* no jobs file – silently skip */ }
+  }
+
   // ── Init ──────────────────────────────────────────────────
   async function init() {
     const projStatus = document.getElementById('proj-status');
@@ -1007,6 +1223,9 @@
     try {
       await fetchProfile();
     } catch (_) { /* profile is non-critical */ }
+
+    fetchNews();
+    fetchTimeline();
 
     try {
       allRepos = await fetchAllRepos();

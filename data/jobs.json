@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Senior Software Engineer",
+    "company": "Stealth Startup",
+    "period": "2024 – Present",
+    "description": "Building data-intensive backend services and internal tooling for a pre-launch fintech product. Focus on API design, real-time pipelines, and developer experience.",
+    "tags": ["Python", "FastAPI", "PostgreSQL", "Kafka", "AWS"],
+    "current": true
+  },
+  {
+    "title": "Software Engineer",
+    "company": "Previous Company",
+    "period": "2022 – 2024",
+    "description": "Developed and maintained ML-powered microservices, built data ingestion pipelines, and contributed to a full-stack React/Node.js product used by thousands of customers.",
+    "tags": ["Python", "React", "Node.js", "Docker", "GCP"],
+    "current": false
+  },
+  {
+    "title": "Junior Software Developer",
+    "company": "Earlier Company",
+    "period": "2020 – 2022",
+    "description": "Contributed to internal tooling and automation projects. Gained hands-on experience with Python, REST APIs, and relational databases in a production environment.",
+    "tags": ["Python", "Django", "PostgreSQL", "Git"],
+    "current": false
+  }
+]

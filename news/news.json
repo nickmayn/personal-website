@@ -1,0 +1,19 @@
+[
+  {
+    "date": "2025-03-01",
+    "title": "Open to new opportunities",
+    "body": "I'm currently exploring new roles at the intersection of data engineering and full-stack development. Reach out on GitHub if you'd like to chat!",
+    "link": "https://github.com/nickmayn"
+  },
+  {
+    "date": "2025-01-15",
+    "title": "New project: data pipeline toolkit",
+    "body": "Released an open-source toolkit for building lightweight, composable data pipelines in Python. Check it out on my GitHub.",
+    "link": "https://github.com/nickmayn"
+  },
+  {
+    "date": "2024-11-10",
+    "title": "Talk at local tech meetup",
+    "body": "Gave a short talk on building ML-powered APIs with FastAPI and Pydantic. Slides available on request."
+  }
+]
