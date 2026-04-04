@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nick Mayn — Projects</title>
+  <title>Nick Mayn — Portfolio</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg:       #0d1117;
       --surface:  #161b22;
+      --surface2: #1c2128;
       --border:   #30363d;
       --accent:   #58a6ff;
       --text:     #c9d1d9;
       --muted:    #8b949e;
       --green:    #3fb950;
-      --yellow:   #d29922;
       --radius:   10px;
+      --sidebar-w: 260px;
     }
 
     body {
@@ -24,256 +25,575 @@
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* ── Header ── */
-    header {
+    /* ── Mobile top bar ── */
+    .topbar {
+      display: none;
+      align-items: center;
+      gap: .75rem;
+      padding: .75rem 1rem;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 2.5rem 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar .hamburger {
+      background: none;
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 1.3rem;
+      line-height: 1;
+      padding: .1rem .3rem;
+    }
+    .topbar .site-title { font-weight: 600; color: #fff; }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      flex: 1;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 1.5rem 1rem;
+      gap: 1.5rem;
+    }
+
+    /* Profile card inside sidebar */
+    .sidebar .profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
+      gap: .5rem;
     }
-    header img.avatar {
-      width: 96px;
-      height: 96px;
+    .sidebar .profile img {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      border: 3px solid var(--border);
-      margin-bottom: 1rem;
+      border: 2px solid var(--border);
+      background: var(--border);
     }
-    header h1 { font-size: 1.75rem; color: #fff; }
-    header p.bio {
-      margin-top: .4rem;
+    .sidebar .profile .name { font-weight: 700; font-size: 1rem; color: #fff; }
+    .sidebar .profile .login { font-size: .8rem; color: var(--muted); }
+    .sidebar .profile .bio-short {
+      font-size: .8rem;
       color: var(--muted);
-      font-size: .95rem;
-      max-width: 480px;
-      margin-inline: auto;
+      line-height: 1.4;
     }
-    header .links { margin-top: .9rem; }
-    header .links a {
+    .sidebar .profile a.gh-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      margin-top: .3rem;
+      font-size: .8rem;
       color: var(--accent);
       text-decoration: none;
-      font-size: .9rem;
-      margin: 0 .4rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .3rem .75rem;
+      transition: border-color .15s, background .15s;
     }
-    header .links a:hover { text-decoration: underline; }
+    .sidebar .profile a.gh-btn:hover { background: var(--surface2); border-color: var(--accent); }
 
-    /* ── Controls ── */
-    .controls {
+    /* Nav links */
+    .sidebar nav { display: flex; flex-direction: column; gap: .25rem; }
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .5rem .7rem;
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .9rem;
+      transition: background .12s, color .12s;
+    }
+    .sidebar nav a:hover { background: var(--surface2); color: var(--text); }
+    .sidebar nav a.active { background: rgba(88,166,255,.12); color: var(--accent); font-weight: 600; }
+    .sidebar nav a .nav-icon { font-size: 1rem; width: 1.2rem; text-align: center; }
+
+    .sidebar .sidebar-footer {
+      margin-top: auto;
+      font-size: .75rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+    .sidebar .sidebar-footer a { color: var(--muted); }
+    .sidebar .sidebar-footer a:hover { color: var(--text); }
+
+    /* ── Main content ── */
+    .content {
+      flex: 1;
+      min-width: 0;
+      padding: 2rem 2rem 4rem;
+      max-width: 960px;
+    }
+
+    /* ── Section headings ── */
+    .section { margin-bottom: 3.5rem; scroll-margin-top: 1.5rem; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: .75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-header h2 { font-size: 1.2rem; color: #fff; }
+    .section-header .section-icon { font-size: 1.15rem; }
+
+    /* ── About ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .9rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+    .stat-card .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .stat-card .value { font-size: 1.4rem; font-weight: 700; color: #fff; }
+    .about-bio {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.2rem;
+      line-height: 1.7;
+      color: var(--text);
+      font-size: .95rem;
+    }
+    .about-bio p + p { margin-top: .75rem; }
+    /* Editable placeholder note */
+    .about-edit-hint {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-top: .6rem;
+      font-style: italic;
+    }
+
+    /* ── Projects controls ── */
+    .proj-controls {
       display: flex;
       flex-wrap: wrap;
-      gap: .7rem;
+      gap: .6rem;
+      margin-bottom: 1rem;
       align-items: center;
-      justify-content: center;
-      padding: 1.4rem 1rem;
     }
-    .controls input[type="search"] {
+    .proj-controls input[type="search"] {
+      flex: 1;
+      min-width: 180px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       color: var(--text);
       font-size: .9rem;
-      padding: .5rem .85rem;
-      width: 260px;
+      padding: .45rem .8rem;
       outline: none;
     }
-    .controls input[type="search"]:focus { border-color: var(--accent); }
-    .controls select {
+    .proj-controls input[type="search"]:focus { border-color: var(--accent); }
+    .proj-controls select {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       color: var(--text);
-      font-size: .9rem;
-      padding: .5rem .85rem;
+      font-size: .85rem;
+      padding: .45rem .75rem;
       outline: none;
       cursor: pointer;
     }
-    .controls select:focus { border-color: var(--accent); }
+    .proj-controls select:focus { border-color: var(--accent); }
+    #proj-count { font-size: .8rem; color: var(--muted); }
 
-    /* ── Grid ── */
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 1rem 3rem;
-    }
-    #count {
-      color: var(--muted);
-      font-size: .85rem;
-      margin-bottom: .9rem;
-      text-align: center;
-    }
+    /* ── Card grid ── */
     #grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: .9rem;
     }
-
-    /* ── Card ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1.1rem 1.2rem;
+      padding: 1rem 1.1rem;
       display: flex;
       flex-direction: column;
-      gap: .55rem;
+      gap: .5rem;
       transition: border-color .15s, transform .15s;
     }
     .card:hover { border-color: var(--accent); transform: translateY(-2px); }
     .card a.repo-name {
       color: var(--accent);
       font-weight: 600;
-      font-size: 1rem;
+      font-size: .95rem;
       text-decoration: none;
       word-break: break-word;
     }
     .card a.repo-name:hover { text-decoration: underline; }
-    .card .description {
-      color: var(--muted);
-      font-size: .85rem;
-      line-height: 1.45;
-      flex: 1;
-    }
+    .card .description { color: var(--muted); font-size: .83rem; line-height: 1.45; flex: 1; }
     .card .meta {
       display: flex;
       flex-wrap: wrap;
-      gap: .5rem .9rem;
-      font-size: .8rem;
+      gap: .4rem .8rem;
+      font-size: .78rem;
       color: var(--muted);
       align-items: center;
       margin-top: auto;
     }
     .lang-dot {
       display: inline-block;
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       border-radius: 50%;
       margin-right: 4px;
       vertical-align: middle;
     }
-    .card .topics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .3rem;
-    }
+    .card .topics { display: flex; flex-wrap: wrap; gap: .25rem; }
     .topic-tag {
       background: rgba(88,166,255,.12);
       color: var(--accent);
       border-radius: 20px;
-      font-size: .72rem;
-      padding: .15rem .55rem;
+      font-size: .7rem;
+      padding: .12rem .5rem;
     }
     .fork-badge {
-      font-size: .72rem;
+      font-size: .7rem;
       background: rgba(139,148,158,.15);
       color: var(--muted);
       border-radius: 20px;
-      padding: .15rem .55rem;
+      padding: .12rem .5rem;
+    }
+    .grid-empty {
+      color: var(--muted);
+      grid-column: 1 / -1;
     }
 
-    /* ── State messages ── */
-    #status {
+    /* ── Loading spinner ── */
+    .spinner-wrap {
       text-align: center;
-      padding: 3rem 1rem;
+      padding: 2.5rem 1rem;
       color: var(--muted);
-      display: none;
     }
-    #status.visible { display: block; }
-    #status .spinner {
-      width: 36px;
-      height: 36px;
+    .spinner {
+      width: 32px; height: 32px;
       border: 3px solid var(--border);
       border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin .7s linear infinite;
-      margin: 0 auto 1rem;
+      margin: 0 auto .8rem;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    footer {
-      border-top: 1px solid var(--border);
-      text-align: center;
-      padding: 1.2rem;
-      font-size: .8rem;
-      color: var(--muted);
+    /* ── Tools section ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: .85rem;
     }
-    footer a { color: var(--muted); }
-    footer a:hover { color: var(--text); }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .tool-card .tool-header {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .tool-card .tool-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .tool-card .tool-name { font-weight: 600; font-size: .9rem; color: var(--text); }
+    .tool-card .tool-count { font-size: .78rem; color: var(--muted); }
+    .tool-bar-bg {
+      height: 5px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .tool-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .4s ease;
+    }
+    .topic-cloud { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+    .topic-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: .78rem;
+      color: var(--text);
+      padding: .2rem .65rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .topbar { display: flex; }
+      .layout { position: relative; }
+      .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100%;
+        z-index: 200;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        padding-top: 3.5rem;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.55);
+        z-index: 199;
+      }
+      .sidebar-overlay.open { display: block; }
+      .content { padding: 1.25rem 1rem 3rem; }
+      .about-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <img id="avatar" class="avatar" src="" alt="avatar" />
-  <h1 id="display-name">nickmayn</h1>
-  <p class="bio" id="bio">Loading profile…</p>
-  <div class="links">
-    <a id="gh-link" href="https://github.com/nickmayn" target="_blank" rel="noopener">GitHub</a>
-  </div>
-</header>
-
-<div class="controls">
-  <input type="search" id="search" placeholder="Search projects…" aria-label="Search" />
-  <select id="sort">
-    <option value="updated">Recently Updated</option>
-    <option value="stars">Most Stars</option>
-    <option value="name">Name (A–Z)</option>
-    <option value="created">Newest First</option>
-  </select>
-  <select id="lang-filter">
-    <option value="">All Languages</option>
-  </select>
+<!-- Mobile top bar -->
+<div class="topbar">
+  <button class="hamburger" id="hamburger" aria-label="Open menu">☰</button>
+  <span class="site-title">Nick Mayn</span>
 </div>
+<div class="sidebar-overlay" id="overlay"></div>
 
-<main>
-  <div id="count"></div>
-  <div id="status" class="visible">
-    <div class="spinner"></div>
-    <p>Loading projects…</p>
-  </div>
-  <div id="grid"></div>
-</main>
+<div class="layout">
 
-<footer>
-  <p>Updated live from the <a href="https://docs.github.com/en/rest" target="_blank" rel="noopener">GitHub API</a> · Site auto-deployed via GitHub Actions</p>
-</footer>
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="profile">
+      <img id="sb-avatar" src="https://avatars.githubusercontent.com/u/33676065?v=4" alt="Nick Mayn avatar" />
+      <div class="name" id="sb-name">Nick Mayn</div>
+      <div class="login">@nickmayn</div>
+      <div class="bio-short" id="sb-bio"></div>
+      <a class="gh-btn" id="sb-gh-link" href="https://github.com/nickmayn" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub Profile
+      </a>
+    </div>
+
+    <nav id="sidebar-nav">
+      <a href="#about" class="active">
+        <span class="nav-icon">👤</span> About
+      </a>
+      <a href="#projects">
+        <span class="nav-icon">📁</span> Projects
+      </a>
+      <a href="#tools">
+        <span class="nav-icon">🛠</span> Tools &amp; Languages
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <p>Auto-updated daily via<br><a href="https://github.com/nickmayn/personal-website/actions" target="_blank" rel="noopener">GitHub Actions</a></p>
+    </div>
+  </aside>
+
+  <!-- ── Main content ── -->
+  <main class="content">
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="section-header">
+        <span class="section-icon">👤</span>
+        <h2>About</h2>
+      </div>
+      <div class="about-grid" id="about-stats">
+        <div class="stat-card">
+          <span class="label">Public Repos</span>
+          <span class="value" id="stat-repos">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="label">Followers</span>
+          <span class="value" id="stat-followers">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="label">Following</span>
+          <span class="value" id="stat-following">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="label">Total Stars</span>
+          <span class="value" id="stat-stars">—</span>
+        </div>
+      </div>
+      <div class="about-bio">
+        <!--
+          ✏️  EDIT THIS SECTION to customise your About text.
+              The GitHub bio above is fetched automatically.
+        -->
+        <p id="about-gh-bio"></p>
+        <p>
+          I'm a developer with a passion for building data-driven tools, APIs, and web applications.
+          My work spans machine learning pipelines, lightweight microservices, and full-stack UIs —
+          often at the intersection of data engineering and product development.
+        </p>
+        <p>
+          Feel free to explore my projects below, or reach out via
+          <a href="https://github.com/nickmayn" target="_blank" rel="noopener" style="color:var(--accent)">GitHub</a>.
+        </p>
+      </div>
+      <p class="about-edit-hint">✏️ Edit the bio paragraph in <code>index.html</code> to personalize this section.</p>
+    </section>
+
+    <!-- Projects -->
+    <section class="section" id="projects">
+      <div class="section-header">
+        <span class="section-icon">📁</span>
+        <h2>Projects</h2>
+      </div>
+      <div class="proj-controls">
+        <input type="search" id="search" placeholder="Search projects…" aria-label="Search projects" />
+        <select id="sort">
+          <option value="updated">Recently Updated</option>
+          <option value="stars">Most Stars</option>
+          <option value="name">Name (A–Z)</option>
+          <option value="created">Newest First</option>
+        </select>
+        <select id="lang-filter">
+          <option value="">All Languages</option>
+        </select>
+        <span id="proj-count"></span>
+      </div>
+      <div id="proj-status" class="spinner-wrap">
+        <div class="spinner"></div>
+        <p>Loading projects…</p>
+      </div>
+      <div id="grid"></div>
+    </section>
+
+    <!-- Tools -->
+    <section class="section" id="tools">
+      <div class="section-header">
+        <span class="section-icon">🛠</span>
+        <h2>Tools &amp; Languages</h2>
+      </div>
+      <div id="tools-status" class="spinner-wrap" style="display:none">
+        <div class="spinner"></div>
+      </div>
+      <div class="tools-grid" id="tools-grid"></div>
+      <div id="topic-section" style="margin-top:1.5rem;display:none">
+        <h3 style="font-size:.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">Topics &amp; Technologies</h3>
+        <div class="topic-cloud" id="topic-cloud"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
 
 <script>
   const USERNAME = 'nickmayn';
 
   // Language color map (subset of github-linguist)
   const LANG_COLORS = {
-    Python:          '#3572A5',
-    JavaScript:      '#f1e05a',
-    TypeScript:      '#3178c6',
-    Java:            '#b07219',
-    HTML:            '#e34c26',
-    CSS:             '#563d7c',
-    Vue:             '#41b883',
-    Go:              '#00ADD8',
-    Ruby:            '#701516',
+    Python:             '#3572A5',
+    JavaScript:         '#f1e05a',
+    TypeScript:         '#3178c6',
+    Java:               '#b07219',
+    HTML:               '#e34c26',
+    CSS:                '#563d7c',
+    Vue:                '#41b883',
+    Go:                 '#00ADD8',
+    Ruby:               '#701516',
     'Jupyter Notebook': '#DA5B0B',
-    Shell:           '#89e051',
-    'C++':           '#f34b7d',
-    C:               '#555555',
-    Rust:            '#dea584',
+    Shell:              '#89e051',
+    'C++':              '#f34b7d',
+    C:                  '#555555',
+    Rust:               '#dea584',
   };
 
   let allRepos = [];
 
+  // ── Mobile sidebar toggle ────────────────────────────────
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('overlay');
+  const hamburger = document.getElementById('hamburger');
+
+  function openSidebar()  { sidebar.classList.add('open');  overlay.classList.add('open'); }
+  function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('open'); }
+
+  hamburger.addEventListener('click', openSidebar);
+  overlay.addEventListener('click', closeSidebar);
+  sidebar.querySelectorAll('nav a').forEach(a => a.addEventListener('click', closeSidebar));
+
+  // ── Active nav on scroll ─────────────────────────────────
+  const navLinks = document.querySelectorAll('#sidebar-nav a');
+  const sections = ['about', 'projects', 'tools'].map(id => document.getElementById(id));
+
+  function updateActiveNav() {
+    let current = sections[0].id;
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === `#${current}`);
+    });
+  }
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+  // ── Fetch GitHub profile ─────────────────────────────────
   async function fetchProfile() {
-    try {
-      const res = await fetch(`https://api.github.com/users/${USERNAME}`);
-      if (!res.ok) return;
-      const data = await res.json();
-      document.getElementById('avatar').src = data.avatar_url;
-      document.getElementById('display-name').textContent = data.name || data.login;
-      document.getElementById('bio').textContent = data.bio || `${data.public_repos} public repositories`;
-      document.getElementById('gh-link').href = data.html_url;
-    } catch (_) { /* non-critical */ }
+    const res = await fetch(`https://api.github.com/users/${USERNAME}`);
+    if (!res.ok) return;
+    const d = await res.json();
+
+    // Sidebar
+    document.getElementById('sb-avatar').src = d.avatar_url;
+    document.getElementById('sb-name').textContent = d.name || d.login;
+    if (d.bio) document.getElementById('sb-bio').textContent = d.bio;
+    document.getElementById('sb-gh-link').href = d.html_url;
+
+    // About stats
+    document.getElementById('stat-repos').textContent     = d.public_repos ?? '—';
+    document.getElementById('stat-followers').textContent = d.followers    ?? '—';
+    document.getElementById('stat-following').textContent = d.following    ?? '—';
+
+    // Bio paragraph in About
+    const bioEl = document.getElementById('about-gh-bio');
+    if (d.bio) {
+      bioEl.textContent = d.bio;
+    } else {
+      bioEl.remove();
+    }
   }
 
+  // ── Fetch repos (snapshot → live API fallback) ────────────
   async function fetchAllRepos() {
-    // Try the pre-built snapshot first (written by the daily GitHub Action).
-    // Fall back to the live API if the snapshot is absent.
     try {
       const snap = await fetch('data/repos.json');
       if (snap.ok) {
@@ -298,6 +618,7 @@
     return repos;
   }
 
+  // ── Helpers ──────────────────────────────────────────────
   function relativeTime(iso) {
     const diff = Date.now() - new Date(iso).getTime();
     const mins = Math.floor(diff / 60000);
@@ -305,42 +626,35 @@
     const days = Math.floor(diff / 86400000);
     const mos  = Math.floor(days / 30);
     const yrs  = Math.floor(days / 365);
-    if (mins < 1)   return 'just now';
-    if (hrs  < 1)   return `${mins}m ago`;
-    if (days < 1)   return `${hrs}h ago`;
-    if (mos  < 1)   return `${days}d ago`;
-    if (yrs  < 1)   return `${mos}mo ago`;
+    if (mins < 1)  return 'just now';
+    if (hrs  < 1)  return `${mins}m ago`;
+    if (days < 1)  return `${hrs}h ago`;
+    if (mos  < 1)  return `${days}d ago`;
+    if (yrs  < 1)  return `${mos}mo ago`;
     return `${yrs}yr ago`;
   }
 
+  // ── Project cards ─────────────────────────────────────────
   function buildCard(repo) {
     const card = document.createElement('div');
     card.className = 'card';
-    card.dataset.name = repo.name.toLowerCase();
-    card.dataset.desc = (repo.description || '').toLowerCase();
-    card.dataset.lang = repo.language || '';
-    card.dataset.updated = repo.pushed_at || repo.updated_at;
-    card.dataset.stars = repo.stargazers_count;
-    card.dataset.created = repo.created_at;
 
     const color = LANG_COLORS[repo.language] || '#8b949e';
     const langHTML = repo.language
       ? `<span><span class="lang-dot" style="background:${color}"></span>${repo.language}</span>`
       : '';
-    const starsHTML = repo.stargazers_count > 0
-      ? `<span>⭐ ${repo.stargazers_count}</span>`
-      : '';
-    const forksHTML = repo.forks_count > 0
-      ? `<span>🍴 ${repo.forks_count}</span>`
-      : '';
-    const forkBadge = repo.fork ? `<span class="fork-badge">fork</span>` : '';
+    const starsHTML  = repo.stargazers_count > 0 ? `<span>⭐ ${repo.stargazers_count}</span>` : '';
+    const forksHTML  = repo.forks_count > 0      ? `<span>🍴 ${repo.forks_count}</span>`      : '';
+    const forkBadge  = repo.fork ? `<span class="fork-badge">fork</span>` : '';
     const topicsHTML = (repo.topics || []).length
       ? `<div class="topics">${repo.topics.map(t => `<span class="topic-tag">${t}</span>`).join('')}</div>`
       : '';
 
     card.innerHTML = `
-      <a class="repo-name" href="${repo.html_url}" target="_blank" rel="noopener">${repo.name}</a>
-      ${forkBadge ? `<span>${forkBadge}</span>` : ''}
+      <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap">
+        <a class="repo-name" href="${repo.html_url}" target="_blank" rel="noopener">${repo.name}</a>
+        ${forkBadge}
+      </div>
       <p class="description">${repo.description || '<em style="opacity:.5">No description</em>'}</p>
       ${topicsHTML}
       <div class="meta">
@@ -371,23 +685,22 @@
       if (sort === 'stars')   return b.stargazers_count - a.stargazers_count;
       if (sort === 'name')    return a.name.localeCompare(b.name);
       if (sort === 'created') return new Date(b.created_at) - new Date(a.created_at);
-      // default: recently updated
       return new Date(b.pushed_at || b.updated_at) - new Date(a.pushed_at || a.updated_at);
     });
 
     return list;
   }
 
-  function render() {
-    const grid = document.getElementById('grid');
-    const count = document.getElementById('count');
+  function renderProjects() {
+    const grid  = document.getElementById('grid');
+    const count = document.getElementById('proj-count');
     grid.innerHTML = '';
 
     const list = getFilteredSorted();
     count.textContent = `${list.length} project${list.length !== 1 ? 's' : ''}`;
 
     if (!list.length) {
-      grid.innerHTML = '<p style="text-align:center;color:var(--muted);grid-column:1/-1">No projects match your search.</p>';
+      grid.innerHTML = '<p class="grid-empty">No projects match your search.</p>';
       return;
     }
 
@@ -401,28 +714,112 @@
     const select = document.getElementById('lang-filter');
     langs.forEach(l => {
       const opt = document.createElement('option');
-      opt.value = l;
-      opt.textContent = l;
+      opt.value = l; opt.textContent = l;
       select.appendChild(opt);
     });
   }
 
-  async function init() {
-    const status = document.getElementById('status');
-    try {
-      await fetchProfile();
-      allRepos = await fetchAllRepos();
-      populateLangFilter();
-      status.classList.remove('visible');
-      render();
-    } catch (err) {
-      status.innerHTML = `<p style="color:#f85149">Failed to load projects: ${err.message}</p>`;
+  // ── Tools section ─────────────────────────────────────────
+  function renderTools() {
+    // Language counts
+    const langCounts = {};
+    allRepos.forEach(r => {
+      if (r.language) langCounts[r.language] = (langCounts[r.language] || 0) + 1;
+    });
+
+    const sorted = Object.entries(langCounts).sort((a, b) => b[1] - a[1]);
+    const maxCount = sorted[0]?.[1] || 1;
+
+    // Total stars per language (bonus metric)
+    const langStars = {};
+    allRepos.forEach(r => {
+      if (r.language && r.stargazers_count > 0)
+        langStars[r.language] = (langStars[r.language] || 0) + r.stargazers_count;
+    });
+
+    // Total stars for About section
+    const totalStars = allRepos.reduce((s, r) => s + r.stargazers_count, 0);
+    document.getElementById('stat-stars').textContent = totalStars;
+
+    const grid = document.getElementById('tools-grid');
+    grid.innerHTML = '';
+
+    sorted.forEach(([lang, count]) => {
+      const color = LANG_COLORS[lang] || '#8b949e';
+      const pct   = Math.round((count / maxCount) * 100);
+      const card  = document.createElement('div');
+      card.className = 'tool-card';
+      card.innerHTML = `
+        <div class="tool-header">
+          <span class="tool-dot" style="background:${color}"></span>
+          <span class="tool-name">${lang}</span>
+        </div>
+        <span class="tool-count">${count} repo${count !== 1 ? 's' : ''}</span>
+        <div class="tool-bar-bg">
+          <div class="tool-bar-fill" style="width:0;background:${color}" data-pct="${pct}"></div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    // Animate bars after paint
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.tool-bar-fill').forEach(el => {
+        el.style.width = el.dataset.pct + '%';
+      });
+    });
+
+    // Topic cloud — aggregate all unique topics
+    const topicCounts = {};
+    allRepos.forEach(r => {
+      (r.topics || []).forEach(t => {
+        topicCounts[t] = (topicCounts[t] || 0) + 1;
+      });
+    });
+
+    const topTopics = Object.entries(topicCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 30)
+      .map(([t]) => t);
+
+    if (topTopics.length) {
+      const cloud   = document.getElementById('topic-cloud');
+      const section = document.getElementById('topic-section');
+      cloud.innerHTML = topTopics
+        .map(t => `<span class="topic-chip">${t}</span>`)
+        .join('');
+      section.style.display = 'block';
     }
   }
 
-  document.getElementById('search').addEventListener('input', render);
-  document.getElementById('sort').addEventListener('change', render);
-  document.getElementById('lang-filter').addEventListener('change', render);
+  // ── Init ──────────────────────────────────────────────────
+  async function init() {
+    const projStatus = document.getElementById('proj-status');
+
+    try {
+      await fetchProfile();
+    } catch (_) { /* profile is non-critical */ }
+
+    try {
+      allRepos = await fetchAllRepos();
+      populateLangFilter();
+      projStatus.style.display = 'none';
+      renderProjects();
+      renderTools();
+    } catch (err) {
+      projStatus.innerHTML = `
+        <p style="color:#f85149">⚠️ Could not load projects from GitHub API.</p>
+        <p style="margin-top:.4rem;font-size:.82rem">
+          This site is hosted on GitHub Pages and fetches data live from the GitHub API.
+          If you are viewing this file locally without a server, open a terminal in this
+          folder and run <code>python3 -m http.server</code>, then visit
+          <code>http://localhost:8000</code>.
+        </p>`;
+    }
+  }
+
+  document.getElementById('search').addEventListener('input', renderProjects);
+  document.getElementById('sort').addEventListener('change', renderProjects);
+  document.getElementById('lang-filter').addEventListener('change', renderProjects);
 
   init();
 </script>
