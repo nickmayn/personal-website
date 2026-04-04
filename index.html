@@ -17,6 +17,8 @@
       --text:      #c9d1d9;
       --muted:     #8b949e;
       --green:     #3fb950;
+      --red:       #f85149;
+      --star:      #e3b341;
       --radius:    10px;
       --sidebar-w: 260px;
       --glow:      rgba(88,166,255,.15);
@@ -697,7 +699,7 @@
     const langHTML = repo.language
       ? `<span><span class="lang-dot" style="background:${color}"></span>${repo.language}</span>`
       : '';
-    const starsHTML  = repo.stargazers_count > 0 ? `<span class="meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="#e3b341"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${repo.stargazers_count}</span>` : '';
+    const starsHTML  = repo.stargazers_count > 0 ? `<span class="meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" style="fill:var(--star)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> ${repo.stargazers_count}</span>` : '';
     const forksHTML  = repo.forks_count > 0      ? `<span class="meta-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"/><line x1="12" y1="12" x2="12" y2="15"/></svg> ${repo.forks_count}</span>` : '';
     const forkBadge  = repo.fork ? `<span class="fork-badge">fork</span>` : '';
     const topicsHTML = (repo.topics || []).length
@@ -861,7 +863,7 @@
       renderTools();
     } catch (err) {
       projStatus.innerHTML = `
-        <p style="color:#f85149;display:flex;align-items:center;gap:.4rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f85149" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Could not load projects from GitHub API.</p>
+        <p style="color:var(--red);display:flex;align-items:center;gap:.4rem"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Could not load projects from GitHub API.</p>
         <p style="margin-top:.4rem;font-size:.82rem">
           This site is hosted on GitHub Pages and fetches data live from the GitHub API.
           If you are viewing this file locally without a server, open a terminal in this
