@@ -1,0 +1,67 @@
+name: Daily Refresh
+
+on:
+  # Run every day at 06:00 UTC to keep the deployed site fresh
+  schedule:
+    - cron: '0 6 * * *'
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: Refresh & Re-deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # Fetch the latest public repos for nickmayn and write them to a
+      # static JSON cache so the page works even without a live API call.
+      - name: Snapshot GitHub repos
+        env:
+          GH_USER: nickmayn
+        run: |
+          mkdir -p data
+          ALL_REPOS="[]"
+          PAGE=1
+          while true; do
+            BATCH=$(curl -sf \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/users/${GH_USER}/repos?per_page=100&page=${PAGE}&type=public")
+            if [ $? -ne 0 ] || [ -z "$BATCH" ] || ! echo "$BATCH" | jq -e 'type == "array"' > /dev/null 2>&1; then
+              echo "Warning: failed to fetch page ${PAGE} or response was not a JSON array; stopping."
+              break
+            fi
+            COUNT=$(echo "$BATCH" | jq 'length')
+            ALL_REPOS=$(echo "$ALL_REPOS" "$BATCH" | jq -s '.[0] + .[1]')
+            echo "Page ${PAGE}: fetched ${COUNT} repos (total so far: $(echo "$ALL_REPOS" | jq 'length'))"
+            if [ "$COUNT" -lt 100 ]; then break; fi
+            PAGE=$((PAGE+1))
+          done
+          echo "$ALL_REPOS" | jq '.' > data/repos.json
+          echo "Saved $(jq 'length' data/repos.json) repos to data/repos.json"
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
