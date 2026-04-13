@@ -3,6 +3,7 @@
     "title": "Senior Data Engineer",
     "company": "Iron Eagle X • Stuttgart, Germany",
     "period": "Jan 2025 — Present",
+    "logo": "https://logo.clearbit.com/ironeaglex.com",
     "bullets": [
       "Led design and delivery of mission applications; one nominated for a SOCOM innovation award.",
       "Engineered cross-domain data pipelines enabling instantaneous movement across red and yellow enclaves.",
@@ -15,6 +16,7 @@
     "title": "Lead Data Engineer",
     "company": "Booz Allen Hamilton • Stuttgart, Germany",
     "period": "Sept 2023 — Jan 2025",
+    "logo": "https://logo.clearbit.com/boozallen.com",
     "bullets": [
       "Built an open-source data platform on Hadoop and Spark to ingest and manage multi-terabyte datasets.",
       "Developed multiple web applications, deploying on Kubernetes in a secure cloud enclave for scalable and resilient access."
@@ -26,6 +28,7 @@
     "title": "Senior Data Scientist",
     "company": "MITRE • McLean, Virginia, United States",
     "period": "Apr 2022 — Sep 2023",
+    "logo": "https://logo.clearbit.com/mitre.org",
     "bullets": [
       "Led a team in developing and maintaining a UI/API.",
       "Developed various stochastic related ML models to assist in decision making.",
@@ -41,6 +44,7 @@
     "title": "Intermediate Data Scientist",
     "company": "MITRE Corporation • McLean, Virginia, United States",
     "period": "Aug 2020 — Apr 2022",
+    "logo": "https://logo.clearbit.com/mitre.org",
     "bullets": [
       "Created optimization engine to assist in privacy preserving contact tracing.",
       "Used Spark to preprocess large scale IP features and make ML based enrichments.",
@@ -56,6 +60,7 @@
     "title": "Associate Software Developer",
     "company": "MITRE Corporation • McLean, Virginia, United States",
     "period": "Jun 2020 — Aug 2020",
+    "logo": "https://logo.clearbit.com/mitre.org",
     "bullets": [
       "Developed AI/ML based solutions to COVID privacy preserving contact tracing efforts.",
       "Implemented pipelines for experimenting/deploying ML models.",
@@ -69,6 +74,7 @@
     "title": "Software Solutions Engineering Intern",
     "company": "MITRE Corporation • McLean, Virginia",
     "period": "May 2019 — Jun 2020",
+    "logo": "https://logo.clearbit.com/mitre.org",
     "bullets": [
       "Wrote SQL functions to help in reducing datasets efficiently.",
       "Created and trained a model to help embed geospatial data into n-dimensional space.",
@@ -83,6 +89,7 @@
     "title": "Data Analyst",
     "company": "Virginia Tech Softball • Blacksburg, VA",
     "period": "Jan 2019 — Jun 2020",
+    "logo": "https://logo.clearbit.com/vt.edu",
     "bullets": [
       "Collected data to be used by the team.",
       "Created a series of programs to be used in analyzing information.",

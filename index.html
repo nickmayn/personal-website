@@ -1035,8 +1035,8 @@
           <span class="value" id="stat-de-yrs">—</span>
         </div>
         <div class="stat-card">
-          <span class="label">Roles Held</span>
-          <span class="value" id="stat-roles">—</span>
+          <span class="label">Software Dev Experience</span>
+          <span class="value" id="stat-swdev-yrs">12+</span>
         </div>
       </div>
       <div class="about-bio">
@@ -1519,14 +1519,13 @@
       if (/data.engineer/i.test(job.title)) deMs += ms;
     });
 
-    const totalYrs = earliest ? Math.floor(yearsDiff(earliest, now)) : 0;
+    const totalYrs = earliest ? Math.max(Math.floor(yearsDiff(earliest, now)), 8) : 8;
     const dsYrs    = Math.floor(dsMs / (365.25 * 24 * 3600 * 1000));
     const deYrs    = Math.floor(deMs / (365.25 * 24 * 3600 * 1000));
 
     document.getElementById('stat-total-yrs').textContent = totalYrs + '+';
     document.getElementById('stat-ds-yrs').textContent    = dsYrs + '+';
     document.getElementById('stat-de-yrs').textContent    = deYrs + '+';
-    document.getElementById('stat-roles').textContent     = jobs.length;
   }
 
   // ── Fetch and render career timeline ─────────────────────
@@ -1605,6 +1604,9 @@
         const activitiesHTML = edu.activities
           ? `<p class="timeline-desc">Activities and societies: ${esc(edu.activities)}</p>`
           : '';
+        const logoHTML = edu.logo
+          ? `<img class="timeline-logo" src="${safeUrl(edu.logo)}" alt="${esc(edu.school)} logo" loading="lazy" />`
+          : '';
         item.innerHTML = `
           <div class="timeline-dot${edu.current ? ' current' : ''}"></div>
           <div class="timeline-card">
@@ -1613,6 +1615,7 @@
                 <span class="timeline-title">${esc(edu.degree)}${edu.field ? `, ${esc(edu.field)}` : ''}</span>
                 ${edu.period ? `<span class="timeline-period">${esc(edu.period)}</span>` : ''}
               </div>
+              ${logoHTML}
             </div>
             <div class="timeline-company">${esc(edu.school)}</div>
             ${gradeHTML}
