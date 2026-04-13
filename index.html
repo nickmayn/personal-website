@@ -1524,29 +1524,41 @@
     } catch (_) { /* no jobs file – silently skip */ }
   }
 
+  // ── Shared events fetch (cached so activity + orgs share one request set) ──
+  let _eventsPromise = null;
+  function getPublicEvents() {
+    if (!_eventsPromise) {
+      _eventsPromise = (async () => {
+        const events = [];
+        for (let page = 1; page <= 3; page++) {
+          const res = await fetch(
+            `https://api.github.com/users/${USERNAME}/events/public?per_page=100&page=${page}`
+          );
+          if (!res.ok) break;
+          const batch = await res.json();
+          if (!batch.length) break;
+          events.push(...batch);
+          if (batch.length < 100) break;
+        }
+        return events;
+      })();
+    }
+    return _eventsPromise;
+  }
+
   // ── Contribution heatmap (GitHub Events API) ─────────────
   async function fetchAndRenderActivity() {
     const statusEl = document.getElementById('activity-status');
     const outerEl  = document.getElementById('heatmap-outer');
     const summaryEl = document.getElementById('activity-summary');
     try {
-      const events = [];
-      for (let page = 1; page <= 3; page++) {
-        const res = await fetch(
-          `https://api.github.com/users/${USERNAME}/events/public?per_page=100&page=${page}`
-        );
-        if (!res.ok) break;
-        const batch = await res.json();
-        if (!batch.length) break;
-        events.push(...batch);
-        if (batch.length < 100) break;
-      }
+      const events = await getPublicEvents();
 
-      // Build day counts for last 90 days
+      // Build day counts for last 365 days
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const dayCounts = {};
-      for (let i = 89; i >= 0; i--) {
+      for (let i = 364; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
         dayCounts[d.toISOString().slice(0, 10)] = 0;
@@ -1562,7 +1574,7 @@
       });
 
       const total = Object.values(dayCounts).reduce((a, b) => a + b, 0);
-      summaryEl.textContent = `${total} contributions in the last 90 days`;
+      summaryEl.textContent = `${total} contributions in the last 365 days`;
 
       renderHeatmap(dayCounts);
       statusEl.style.display = 'none';
@@ -1630,15 +1642,39 @@
     const statusEl = document.getElementById('orgs-status');
     const gridEl   = document.getElementById('orgs-grid');
     try {
-      const res = await fetch(`https://api.github.com/users/${USERNAME}/orgs`);
-      if (!res.ok) throw new Error('not ok');
-      const orgs = await res.json();
-      if (!orgs.length) {
+      // Fetch current public org memberships and recent events in parallel
+      const [orgsRes, events] = await Promise.all([
+        fetch(`https://api.github.com/users/${USERNAME}/orgs`),
+        getPublicEvents().catch(() => []),
+      ]);
+      if (!orgsRes.ok) throw new Error('not ok');
+      const apiOrgs = await orgsRes.json();
+
+      // Build a map of login → org object from API results
+      const orgMap = new Map(apiOrgs.map(o => [o.login.toLowerCase(), o]));
+
+      // Supplement with any orgs inferred from event repo names
+      events.forEach(ev => {
+        const repoName = ev.repo?.name;
+        if (!repoName) return;
+        const owner = repoName.split('/')[0];
+        if (!owner || owner.toLowerCase() === USERNAME.toLowerCase()) return;
+        const key = owner.toLowerCase();
+        if (!orgMap.has(key)) {
+          orgMap.set(key, {
+            login:      owner,
+            avatar_url: `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?v=4`,
+          });
+        }
+      });
+
+      if (!orgMap.size) {
         document.getElementById('orgs').style.display = 'none';
         return;
       }
+
       const frag = document.createDocumentFragment();
-      orgs.forEach(org => {
+      orgMap.forEach(org => {
         const a = document.createElement('a');
         a.className = 'org-card';
         a.href      = `https://github.com/${esc(org.login)}`;
