@@ -25,12 +25,12 @@
   {
     "title": "Senior Data Scientist",
     "company": "MITRE • McLean, VA",
-    "period": "Apr 2022 — Present",
+    "period": "Apr 2022 — Jan 2025",
     "bullets": [
       "Led a 5-person team to deliver a production UI and REST API for an analytic tool, ensuring secure, reliable operations."
     ],
     "tags": ["Data Science", "REST API", "Python"],
-    "current": true
+    "current": false
   },
   {
     "title": "Data Scientist",
