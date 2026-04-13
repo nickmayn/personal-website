@@ -352,7 +352,7 @@
     /* ── About ── */
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
       gap: 1rem;
       margin-bottom: 1.25rem;
     }
@@ -1027,6 +1027,10 @@
           <span class="value" id="stat-total-yrs">—</span>
         </div>
         <div class="stat-card">
+          <span class="label">Software Dev Yrs</span>
+          <span class="value" id="stat-sw-yrs">—</span>
+        </div>
+        <div class="stat-card">
           <span class="label">Data Science Yrs</span>
           <span class="value" id="stat-ds-yrs">—</span>
         </div>
@@ -1487,6 +1491,10 @@
     };
     const now = new Date();
 
+    // Configurable start years for stats displayed on the About card
+    const EXPERIENCE_START    = new Date(2018, 0, 1); // 8+ years of professional experience
+    const SOFTWARE_DEV_START  = new Date(2014, 0, 1); // 12+ years of software development
+
     function parseDate(s) {
       s = s.trim();
       if (s === 'Present') return now;
@@ -1507,23 +1515,23 @@
       return (end - start) / (365.25 * 24 * 3600 * 1000);
     }
 
-    let earliest = null;
     let dsMs = 0, deMs = 0;
 
     jobs.forEach(job => {
       const p = parsePeriod(job.period || '');
       if (!p || isNaN(p.start) || isNaN(p.end)) return;
-      if (!earliest || p.start < earliest) earliest = p.start;
       const ms = p.end - p.start;
       if (/data.scient/i.test(job.title))   dsMs += ms;
       if (/data.engineer/i.test(job.title)) deMs += ms;
     });
 
-    const totalYrs = earliest ? Math.floor(yearsDiff(earliest, now)) : 0;
+    const totalYrs = Math.floor(yearsDiff(EXPERIENCE_START, now));
+    const swDevYrs = Math.floor(yearsDiff(SOFTWARE_DEV_START, now));
     const dsYrs    = Math.floor(dsMs / (365.25 * 24 * 3600 * 1000));
     const deYrs    = Math.floor(deMs / (365.25 * 24 * 3600 * 1000));
 
     document.getElementById('stat-total-yrs').textContent = totalYrs + '+';
+    document.getElementById('stat-sw-yrs').textContent    = swDevYrs + '+';
     document.getElementById('stat-ds-yrs').textContent    = dsYrs + '+';
     document.getElementById('stat-de-yrs').textContent    = deYrs + '+';
     document.getElementById('stat-roles').textContent     = jobs.length;
@@ -1605,6 +1613,9 @@
         const activitiesHTML = edu.activities
           ? `<p class="timeline-desc">Activities and societies: ${esc(edu.activities)}</p>`
           : '';
+        const logoHTML = edu.logo
+          ? `<img class="timeline-logo" src="${safeUrl(edu.logo)}" alt="${esc(edu.school)} logo" loading="lazy" />`
+          : '';
         item.innerHTML = `
           <div class="timeline-dot${edu.current ? ' current' : ''}"></div>
           <div class="timeline-card">
@@ -1613,6 +1624,7 @@
                 <span class="timeline-title">${esc(edu.degree)}${edu.field ? `, ${esc(edu.field)}` : ''}</span>
                 ${edu.period ? `<span class="timeline-period">${esc(edu.period)}</span>` : ''}
               </div>
+              ${logoHTML}
             </div>
             <div class="timeline-company">${esc(edu.school)}</div>
             ${gradeHTML}

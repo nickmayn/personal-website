@@ -4,6 +4,7 @@
     "field": "Computational Science and Informatics",
     "school": "George Mason University",
     "period": "2021 – 2030",
+    "logo": "https://logo.clearbit.com/gmu.edu",
     "current": true
   },
   {
@@ -11,6 +12,7 @@
     "field": "Computational Science and Informatics",
     "school": "George Mason University",
     "period": "Aug 2021 – Dec 2025",
+    "logo": "https://logo.clearbit.com/gmu.edu",
     "current": false
   },
   {
@@ -20,6 +22,7 @@
     "period": "2016 – 2020",
     "grade": "Graduated",
     "activities": "Curie Living Learning Community, CMDA Club",
+    "logo": "https://logo.clearbit.com/vt.edu",
     "current": false
   },
   {
@@ -28,6 +31,7 @@
     "school": "Virginia Tech",
     "period": "2016 – 2020",
     "grade": "Graduated",
+    "logo": "https://logo.clearbit.com/vt.edu",
     "current": false
   }
 ]
