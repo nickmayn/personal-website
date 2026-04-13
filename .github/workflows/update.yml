@@ -57,6 +57,40 @@ jobs:
           echo "$ALL_REPOS" | jq '.' > data/repos.json
           echo "Saved $(jq 'length' data/repos.json) repos to data/repos.json"
 
+      - name: Snapshot GitHub contributions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: nickmayn
+        run: |
+          mkdir -p data
+          TODAY=$(date -u +%Y-%m-%dT23:59:59Z)
+          YEAR_AGO=$(date -u -d "364 days ago" +%Y-%m-%dT00:00:00Z)
+          cat > /tmp/gql_query.json <<EOF
+          {
+            "query": "query(\$login:String!,\$from:DateTime!,\$to:DateTime!){user(login:\$login){contributionsCollection(from:\$from,to:\$to){contributionCalendar{totalContributions weeks{contributionDays{date contributionCount}}}}}}",
+            "variables": {
+              "login": "${GH_USER}",
+              "from": "${YEAR_AGO}",
+              "to": "${TODAY}"
+            }
+          }
+          EOF
+          RESULT=$(curl -sf \
+            -H "Authorization: bearer ${GH_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d @/tmp/gql_query.json \
+            https://api.github.com/graphql)
+          if [ $? -ne 0 ] || [ -z "$RESULT" ]; then
+            echo "Warning: failed to fetch contributions from GraphQL API"
+          else
+            echo "$RESULT" | jq '{
+              totalContributions: .data.user.contributionsCollection.contributionCalendar.totalContributions,
+              days: (.data.user.contributionsCollection.contributionCalendar.weeks | [.[].contributionDays[]] | map({(.date): .contributionCount}) | add)
+            }' > data/contributions.json
+            echo "Saved $(jq '.days | length' data/contributions.json) days, $(jq .totalContributions data/contributions.json) total contributions"
+          fi
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:

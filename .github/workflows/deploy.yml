@@ -33,6 +33,63 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Snapshot GitHub repos
+        env:
+          GH_USER: nickmayn
+        run: |
+          mkdir -p data
+          ALL_REPOS="[]"
+          PAGE=1
+          while true; do
+            BATCH=$(curl -sf \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/users/${GH_USER}/repos?per_page=100&page=${PAGE}&type=public")
+            if [ $? -ne 0 ] || [ -z "$BATCH" ] || ! echo "$BATCH" | jq -e 'type == "array"' > /dev/null 2>&1; then
+              echo "Warning: failed to fetch page ${PAGE} or response was not a JSON array; stopping."
+              break
+            fi
+            COUNT=$(echo "$BATCH" | jq 'length')
+            ALL_REPOS=$(echo "$ALL_REPOS" "$BATCH" | jq -s '.[0] + .[1]')
+            echo "Page ${PAGE}: fetched ${COUNT} repos (total so far: $(echo "$ALL_REPOS" | jq 'length'))"
+            if [ "$COUNT" -lt 100 ]; then break; fi
+            PAGE=$((PAGE+1))
+          done
+          echo "$ALL_REPOS" | jq '.' > data/repos.json
+          echo "Saved $(jq 'length' data/repos.json) repos to data/repos.json"
+
+      - name: Snapshot GitHub contributions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: nickmayn
+        run: |
+          TODAY=$(date -u +%Y-%m-%dT23:59:59Z)
+          YEAR_AGO=$(date -u -d "364 days ago" +%Y-%m-%dT00:00:00Z)
+          cat > /tmp/gql_query.json <<EOF
+          {
+            "query": "query(\$login:String!,\$from:DateTime!,\$to:DateTime!){user(login:\$login){contributionsCollection(from:\$from,to:\$to){contributionCalendar{totalContributions weeks{contributionDays{date contributionCount}}}}}}",
+            "variables": {
+              "login": "${GH_USER}",
+              "from": "${YEAR_AGO}",
+              "to": "${TODAY}"
+            }
+          }
+          EOF
+          RESULT=$(curl -sf \
+            -H "Authorization: bearer ${GH_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d @/tmp/gql_query.json \
+            https://api.github.com/graphql)
+          if [ $? -ne 0 ] || [ -z "$RESULT" ]; then
+            echo "Warning: failed to fetch contributions from GraphQL API"
+          else
+            echo "$RESULT" | jq '{
+              totalContributions: .data.user.contributionsCollection.contributionCalendar.totalContributions,
+              days: (.data.user.contributionsCollection.contributionCalendar.weeks | [.[].contributionDays[]] | map({(.date): .contributionCount}) | add)
+            }' > data/contributions.json
+            echo "Saved $(jq '.days | length' data/contributions.json) days, $(jq .totalContributions data/contributions.json) total contributions"
+          fi
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
