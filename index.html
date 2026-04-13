@@ -8,35 +8,35 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0d1117;
-      --surface:   #161b22;
-      --surface2:  #1c2128;
-      --border:    #30363d;
-      --accent:    #58a6ff;
-      --accent2:   #a78bfa;
-      --text:      #c9d1d9;
-      --muted:     #8b949e;
-      --green:     #3fb950;
-      --red:       #f85149;
-      --star:      #e3b341;
+      --bg:        #0c0c0c;
+      --surface:   #161616;
+      --surface2:  #1e1e1e;
+      --border:    #2c2c2c;
+      --accent:    #e8e8e8;
+      --accent2:   #a0a0a0;
+      --text:      #e8e8e8;
+      --muted:     #666666;
+      --green:     #4ade80;
+      --red:       #f87171;
+      --star:      #fbbf24;
       --radius:    10px;
       --sidebar-w: 260px;
-      --glow:      rgba(88,166,255,.15);
+      --glow:      rgba(232,232,232,.10);
     }
 
     [data-theme="light"] {
-      --bg:       #f6f8fa;
-      --surface:  #ffffff;
-      --surface2: #eaf0f6;
-      --border:   #d0d7de;
-      --accent:   #0969da;
-      --accent2:  #8250df;
-      --text:     #1f2328;
-      --muted:    #57606a;
-      --green:    #1a7f37;
-      --red:      #cf222e;
-      --star:     #9a6700;
-      --glow:     rgba(9,105,218,.12);
+      --bg:       #ffffff;
+      --surface:  #fafafa;
+      --surface2: #f2f2f2;
+      --border:   #e0e0e0;
+      --accent:   #111111;
+      --accent2:  #555555;
+      --text:     #111111;
+      --muted:    #6b6b6b;
+      --green:    #16a34a;
+      --red:      #dc2626;
+      --star:     #ca8a04;
+      --glow:     rgba(0,0,0,.05);
     }
 
     /* smooth theme transition on key structural elements */
@@ -50,8 +50,8 @@
     }
 
     body {
-      background: radial-gradient(ellipse at 20% 10%, rgba(88,166,255,.07) 0%, var(--bg) 55%),
-                  radial-gradient(ellipse at 80% 90%, rgba(167,139,250,.05) 0%, transparent 55%),
+      background: radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.04) 0%, var(--bg) 55%),
+                  radial-gradient(ellipse at 80% 90%, rgba(255,255,255,.02) 0%, transparent 55%),
                   var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -60,8 +60,8 @@
       flex-direction: column;
     }
     [data-theme="light"] body {
-      background: radial-gradient(ellipse at 20% 10%, rgba(9,105,218,.05) 0%, var(--bg) 55%),
-                  radial-gradient(ellipse at 80% 90%, rgba(130,80,223,.04) 0%, transparent 55%),
+      background: radial-gradient(ellipse at 20% 10%, rgba(0,0,0,.03) 0%, var(--bg) 55%),
+                  radial-gradient(ellipse at 80% 90%, rgba(0,0,0,.02) 0%, transparent 55%),
                   var(--bg);
     }
 
@@ -86,7 +86,7 @@
       line-height: 1;
       padding: .1rem .3rem;
     }
-    .topbar .site-title { font-weight: 600; color: #fff; }
+    .topbar .site-title { font-weight: 600; color: var(--text); }
 
     /* ── Layout ── */
     .layout {
@@ -128,15 +128,27 @@
       animation: avatar-glow 3s ease-in-out infinite;
     }
     @keyframes avatar-glow {
-      0%, 100% { box-shadow: 0 0 12px rgba(88,166,255,.18); }
-      50%       { box-shadow: 0 0 24px rgba(88,166,255,.35); }
+      0%, 100% { box-shadow: 0 0 12px rgba(232,232,232,.12); }
+      50%       { box-shadow: 0 0 24px rgba(232,232,232,.25); }
+    }
+    [data-theme="light"] .sidebar .profile img {
+      animation: avatar-glow-light 3s ease-in-out infinite;
+    }
+    @keyframes avatar-glow-light {
+      0%, 100% { box-shadow: 0 0 12px rgba(0,0,0,.08); }
+      50%       { box-shadow: 0 0 24px rgba(0,0,0,.16); }
     }
     .sidebar .profile .name {
       font-weight: 700;
       font-size: 1rem;
-      background: linear-gradient(135deg, #fff 45%, var(--accent));
+      background: linear-gradient(135deg, #ffffff 45%, var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    [data-theme="light"] .sidebar .profile .name {
+      background: linear-gradient(135deg, #111111 45%, var(--accent2));
+      -webkit-background-clip: text;
       background-clip: text;
     }
     .sidebar .profile .login { font-size: .8rem; color: var(--muted); }
@@ -157,10 +169,18 @@
       border-radius: var(--radius);
       padding: .3rem .75rem;
       background: linear-gradient(var(--surface), var(--surface)) padding-box,
-                  linear-gradient(135deg, rgba(88,166,255,.5), rgba(167,139,250,.3)) border-box;
+                  linear-gradient(135deg, rgba(232,232,232,.4), rgba(160,160,160,.25)) border-box;
       transition: background .15s;
     }
     .sidebar .profile a.gh-btn:hover {
+      background: linear-gradient(var(--surface2), var(--surface2)) padding-box,
+                  linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+    }
+    [data-theme="light"] .sidebar .profile a.gh-btn {
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, rgba(17,17,17,.35), rgba(85,85,85,.2)) border-box;
+    }
+    [data-theme="light"] .sidebar .profile a.gh-btn:hover {
       background: linear-gradient(var(--surface2), var(--surface2)) padding-box,
                   linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
     }
@@ -179,7 +199,8 @@
       transition: background .12s, color .12s;
     }
     .sidebar nav a:hover { background: var(--surface2); color: var(--text); }
-    .sidebar nav a.active { background: linear-gradient(90deg, rgba(88,166,255,.15), rgba(167,139,250,.07)); color: var(--accent); font-weight: 600; border-left: 2px solid var(--accent); padding-left: calc(.7rem - 2px); }
+    .sidebar nav a.active { background: linear-gradient(90deg, rgba(232,232,232,.12), rgba(160,160,160,.06)); color: var(--accent); font-weight: 600; border-left: 2px solid var(--accent); padding-left: calc(.7rem - 2px); }
+    [data-theme="light"] .sidebar nav a.active { background: linear-gradient(90deg, rgba(17,17,17,.08), rgba(85,85,85,.04)); }
     .sidebar nav a .nav-icon { width: 1rem; height: 1rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
 
     /* ── Subsection heading ── */
@@ -205,7 +226,7 @@
       bottom: 0;
       width: 2px;
       background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent 90%);
-      opacity: .35;
+      opacity: .3;
     }
     .timeline-item {
       position: relative;
@@ -227,17 +248,24 @@
       height: 16px;
       border-radius: 50%;
       background: var(--surface);
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 8px rgba(88,166,255,.35);
+      border: 2px solid var(--border);
       z-index: 1;
     }
     .timeline-dot.current {
       background: var(--accent);
+      border-color: var(--accent);
       animation: dot-pulse 2.2s ease-in-out infinite;
     }
     @keyframes dot-pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(88,166,255,.5); }
-      50%      { box-shadow: 0 0 0 7px rgba(88,166,255,0); }
+      0%,100% { box-shadow: 0 0 0 0 rgba(232,232,232,.5); }
+      50%      { box-shadow: 0 0 0 7px rgba(232,232,232,0); }
+    }
+    [data-theme="light"] .timeline-dot.current {
+      animation: dot-pulse-light 2.2s ease-in-out infinite;
+    }
+    @keyframes dot-pulse-light {
+      0%,100% { box-shadow: 0 0 0 0 rgba(17,17,17,.4); }
+      50%      { box-shadow: 0 0 0 7px rgba(17,17,17,0); }
     }
     .timeline-card {
       background: linear-gradient(135deg, var(--surface), var(--surface2));
@@ -247,9 +275,12 @@
       transition: border-color .15s, box-shadow .15s, transform .15s;
     }
     .timeline-card:hover {
-      border-color: rgba(88,166,255,.45);
-      box-shadow: 0 4px 20px rgba(88,166,255,.1);
+      border-color: var(--accent2);
+      box-shadow: 0 4px 20px rgba(232,232,232,.06);
       transform: translateX(3px);
+    }
+    [data-theme="light"] .timeline-card:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
     }
     .timeline-card-header {
       display: flex;
@@ -276,47 +307,12 @@
     .timeline-desc { font-size: .84rem; color: var(--muted); line-height: 1.6; }
     .timeline-tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .55rem; }
     .timeline-tag {
-      background: rgba(167,139,250,.12);
+      background: rgba(160,160,160,.12);
       color: var(--accent2);
       border-radius: 20px;
       font-size: .7rem;
       padding: .12rem .5rem;
     }
-
-    /* ── News section ── */
-    .news-list { display: flex; flex-direction: column; gap: .85rem; }
-    .news-card {
-      background: linear-gradient(135deg, var(--surface), var(--surface2));
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem 1.2rem;
-      display: flex;
-      flex-direction: column;
-      gap: .3rem;
-      transition: border-color .15s, transform .15s, box-shadow .15s;
-    }
-    .news-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(88,166,255,.09); }
-    .news-card-body-row {
-      display: flex;
-      gap: .9rem;
-      align-items: flex-start;
-    }
-    .news-card-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; }
-    .news-card-img {
-      width: 72px;
-      height: 72px;
-      flex-shrink: 0;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-    }
-    .news-card-header { display: flex; align-items: baseline; gap: .6rem; flex-wrap: wrap; }
-    .news-title { font-weight: 600; font-size: .93rem; color: var(--text); flex: 1; }
-    .news-title a { color: inherit; text-decoration: none; }
-    .news-title a:hover { color: var(--accent); }
-    .news-date { font-size: .74rem; color: var(--muted); white-space: nowrap; }
-    .news-body { font-size: .84rem; color: var(--muted); line-height: 1.55; }
 
     /* ── Main content ── */
     .content {
@@ -335,13 +331,6 @@
       padding-bottom: .75rem;
       border-bottom: 1px solid var(--border);
     }
-    .section-header h2 {
-      font-size: 1.2rem;
-      background: linear-gradient(135deg, #fff 50%, rgba(200,215,255,.85));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
     .section-icon {
       display: inline-flex;
       align-items: center;
@@ -349,10 +338,14 @@
       width: 30px;
       height: 30px;
       border-radius: 8px;
-      background: linear-gradient(135deg, rgba(88,166,255,.2), rgba(167,139,250,.12));
-      border: 1px solid rgba(88,166,255,.25);
+      background: linear-gradient(135deg, rgba(232,232,232,.15), rgba(160,160,160,.08));
+      border: 1px solid rgba(232,232,232,.18);
       color: var(--accent);
       flex-shrink: 0;
+    }
+    [data-theme="light"] .section-icon {
+      background: linear-gradient(135deg, rgba(17,17,17,.08), rgba(85,85,85,.05));
+      border: 1px solid rgba(17,17,17,.14);
     }
 
     /* ── About ── */
@@ -364,7 +357,7 @@
     }
     .stat-card {
       background: linear-gradient(var(--surface2), var(--surface2)) padding-box,
-                  linear-gradient(135deg, rgba(88,166,255,.35), rgba(167,139,250,.18)) border-box;
+                  linear-gradient(135deg, rgba(232,232,232,.25), rgba(160,160,160,.12)) border-box;
       border: 1px solid transparent;
       border-radius: var(--radius);
       padding: .9rem 1.1rem;
@@ -372,13 +365,22 @@
       flex-direction: column;
       gap: .2rem;
     }
+    [data-theme="light"] .stat-card {
+      background: linear-gradient(var(--surface2), var(--surface2)) padding-box,
+                  linear-gradient(135deg, rgba(17,17,17,.20), rgba(85,85,85,.10)) border-box;
+    }
     .stat-card .label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
     .stat-card .value {
       font-size: 1.6rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #fff, var(--accent));
+      background: linear-gradient(135deg, #ffffff, var(--accent2));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    [data-theme="light"] .stat-card .value {
+      background: linear-gradient(135deg, #222222, var(--accent2));
+      -webkit-background-clip: text;
       background-clip: text;
     }
     .about-bio {
@@ -392,13 +394,6 @@
       font-size: .95rem;
     }
     .about-bio p + p { margin-top: .75rem; }
-    /* Editable placeholder note */
-    .about-edit-hint {
-      font-size: .75rem;
-      color: var(--muted);
-      margin-top: .6rem;
-      font-style: italic;
-    }
 
     /* ── Projects controls ── */
     .proj-controls {
@@ -449,7 +444,8 @@
       gap: .5rem;
       transition: border-color .15s, transform .15s, box-shadow .15s;
     }
-    .card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(88,166,255,.2), 0 8px 28px rgba(88,166,255,.1); }
+    .card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(232,232,232,.15), 0 8px 28px rgba(232,232,232,.07); }
+    [data-theme="light"] .card:hover { box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 8px 28px rgba(0,0,0,.08); }
     .card a.repo-name {
       color: var(--accent);
       font-weight: 600;
@@ -478,11 +474,14 @@
     }
     .card .topics { display: flex; flex-wrap: wrap; gap: .25rem; }
     .topic-tag {
-      background: rgba(88,166,255,.12);
+      background: rgba(232,232,232,.10);
       color: var(--accent);
       border-radius: 20px;
       font-size: .7rem;
       padding: .12rem .5rem;
+    }
+    [data-theme="light"] .topic-tag {
+      background: rgba(17,17,17,.08);
     }
     .fork-badge {
       font-size: .7rem;
@@ -528,7 +527,8 @@
       gap: .5rem;
       transition: border-color .15s, transform .15s, box-shadow .15s;
     }
-    .tool-card:hover { border-color: rgba(88,166,255,.4); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(88,166,255,.07); }
+    .tool-card:hover { border-color: rgba(232,232,232,.35); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(232,232,232,.05); }
+    [data-theme="light"] .tool-card:hover { border-color: rgba(17,17,17,.35); box-shadow: 0 4px 16px rgba(0,0,0,.07); }
     .tool-card .tool-header {
       display: flex;
       align-items: center;
@@ -563,7 +563,8 @@
       transition: border-color .15s, color .15s;
       cursor: default;
     }
-    .topic-chip:hover { border-color: rgba(88,166,255,.4); color: var(--accent); }
+    .topic-chip:hover { border-color: rgba(232,232,232,.35); color: var(--accent); }
+    [data-theme="light"] .topic-chip:hover { border-color: rgba(17,17,17,.35); }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -609,19 +610,19 @@
     }
     #aurora span:nth-child(1) {
       width: 65vw; height: 65vw;
-      background: radial-gradient(circle, rgba(88,166,255,.14) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,255,255,.06) 0%, transparent 70%);
       top: -20%; left: -10%;
       animation: aurora1 24s ease-in-out infinite;
     }
     #aurora span:nth-child(2) {
       width: 55vw; height: 55vw;
-      background: radial-gradient(circle, rgba(167,139,250,.11) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(160,160,160,.05) 0%, transparent 70%);
       bottom: -15%; right: -10%;
       animation: aurora2 30s ease-in-out infinite;
     }
     #aurora span:nth-child(3) {
       width: 38vw; height: 38vw;
-      background: radial-gradient(circle, rgba(63,185,80,.07) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(200,200,200,.03) 0%, transparent 70%);
       top: 35%; left: 42%;
       animation: aurora3 19s ease-in-out infinite;
     }
@@ -657,13 +658,20 @@
       border-radius: inherit;
       background: radial-gradient(
         380px circle at var(--mx, -300px) var(--my, -300px),
-        rgba(88,166,255,.18),
+        rgba(232,232,232,.12),
         transparent 60%
       );
       pointer-events: none;
       z-index: 0;
       opacity: 0;
       transition: opacity .25s;
+    }
+    [data-theme="light"] .card::before, [data-theme="light"] .tool-card::before {
+      background: radial-gradient(
+        380px circle at var(--mx, -300px) var(--my, -300px),
+        rgba(17,17,17,.07),
+        transparent 60%
+      );
     }
     .card:hover::before, .tool-card:hover::before { opacity: 1; }
     .card > *, .tool-card > * { position: relative; z-index: 1; }
@@ -674,14 +682,22 @@
     }
     .stat-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 0 0 1px rgba(88,166,255,.35), 0 8px 28px rgba(88,166,255,.14);
+      box-shadow: 0 0 0 1px rgba(232,232,232,.25), 0 8px 28px rgba(232,232,232,.09);
+    }
+    [data-theme="light"] .stat-card:hover {
+      box-shadow: 0 0 0 1px rgba(0,0,0,.12), 0 8px 28px rgba(0,0,0,.08);
     }
     /* Pulsing border glow on stat cards */
     @keyframes stat-glow {
-      0%,100% { box-shadow: 0 0 8px rgba(88,166,255,.06); }
-      50%      { box-shadow: 0 0 22px rgba(88,166,255,.16); }
+      0%,100% { box-shadow: 0 0 8px rgba(232,232,232,.04); }
+      50%      { box-shadow: 0 0 22px rgba(232,232,232,.10); }
+    }
+    @keyframes stat-glow-light {
+      0%,100% { box-shadow: 0 0 8px rgba(0,0,0,.03); }
+      50%      { box-shadow: 0 0 22px rgba(0,0,0,.08); }
     }
     .stat-card { animation: stat-glow 4s ease-in-out infinite; }
+    [data-theme="light"] .stat-card { animation: stat-glow-light 4s ease-in-out infinite; }
 
     /* ── Section entrance animation ── */
     @keyframes fadeSlideUp {
@@ -690,9 +706,8 @@
     }
     .section { animation: fadeSlideUp .55s cubic-bezier(.16,1,.3,1) both; }
     #about    { animation-delay: .08s; }
-    #news     { animation-delay: .14s; }
-    #projects { animation-delay: .20s; }
-    #tools    { animation-delay: .30s; }
+    #projects { animation-delay: .14s; }
+    #tools    { animation-delay: .20s; }
 
     /* ── Project / tool card entrance ── */
     @keyframes cardIn {
@@ -701,12 +716,12 @@
     }
     .card { animation: cardIn .4s cubic-bezier(.16,1,.3,1) both; }
 
-    /* ── Shimmer animation on section headings ── */
     .section-header h2 {
+      font-size: 1.2rem;
       background: linear-gradient(
         90deg,
         #ffffff 0%,
-        #c8d7ff 30%,
+        #e0e0e0 30%,
         var(--accent2) 60%,
         #ffffff 100%
       );
@@ -715,6 +730,18 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: text-shimmer 6s linear infinite;
+    }
+    [data-theme="light"] .section-header h2 {
+      background: linear-gradient(
+        90deg,
+        #111111 0%,
+        #444444 30%,
+        var(--accent2) 60%,
+        #111111 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
     }
     @keyframes text-shimmer {
       0%   { background-position: 0%   center; }
@@ -725,13 +752,21 @@
     .card:hover {
       border-color: var(--accent);
       transform: translateY(-4px);
-      box-shadow: 0 0 0 1px rgba(88,166,255,.25),
-                  0 10px 32px rgba(88,166,255,.14);
+      box-shadow: 0 0 0 1px rgba(232,232,232,.18),
+                  0 10px 32px rgba(232,232,232,.10);
+    }
+    [data-theme="light"] .card:hover {
+      box-shadow: 0 0 0 1px rgba(0,0,0,.12),
+                  0 10px 32px rgba(0,0,0,.09);
     }
     .tool-card:hover {
-      border-color: rgba(88,166,255,.5);
+      border-color: rgba(232,232,232,.4);
       transform: translateY(-3px);
-      box-shadow: 0 4px 20px rgba(88,166,255,.1);
+      box-shadow: 0 4px 20px rgba(232,232,232,.07);
+    }
+    [data-theme="light"] .tool-card:hover {
+      border-color: rgba(17,17,17,.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
     }
     /* ── Timeline bullet list ── */
     .timeline-bullets {
@@ -830,9 +865,6 @@
       <a href="#about" class="active">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> About
       </a>
-      <a href="#news">
-        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8z"/></svg></span> News
-      </a>
       <a href="#projects">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span> Projects
       </a>
@@ -894,26 +926,12 @@
           <a href="https://github.com/nickmayn" target="_blank" rel="noopener" style="color:var(--accent)">GitHub</a>.
         </p>
       </div>
-      <p class="about-edit-hint">Edit the bio paragraph and <code>data/jobs.json</code> to personalize this section.</p>
 
       <h3 class="subsection-title">Career History</h3>
       <div class="timeline" id="timeline">
         <div class="timeline-line"></div>
         <!-- items injected by JS from data/jobs.json -->
       </div>
-    </section>
-
-    <!-- News -->
-    <section class="section" id="news">
-      <div class="section-header">
-        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8z"/></svg></span>
-        <h2>News</h2>
-      </div>
-      <div id="news-status" class="spinner-wrap">
-        <div class="spinner"></div>
-        <p>Loading news…</p>
-      </div>
-      <div class="news-list" id="news-list"></div>
     </section>
 
     <!-- Projects -->
@@ -998,7 +1016,7 @@
 
   // ── Active nav on scroll ─────────────────────────────────
   const navLinks = document.querySelectorAll('#sidebar-nav a');
-  const sections = ['about', 'news', 'projects', 'tools'].map(id => document.getElementById(id));
+  const sections = ['about', 'projects', 'tools'].map(id => document.getElementById(id));
 
   function updateActiveNav() {
     let current = sections[0].id;
@@ -1260,51 +1278,6 @@
     } catch (_) { return '#'; }
   }
 
-  // ── Fetch and render news ─────────────────────────────────
-  async function fetchNews() {
-    const newsStatus = document.getElementById('news-status');
-    const newsList   = document.getElementById('news-list');
-    try {
-      const res = await fetch('news/news.json');
-      if (!res.ok) throw new Error('not found');
-      const items = await res.json();
-      newsStatus.style.display = 'none';
-      if (!items.length) {
-        newsList.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No news yet. Add entries to <code>news/news.json</code>.</p>';
-        return;
-      }
-      const frag = document.createDocumentFragment();
-      items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'news-card';
-        const dateStr = item.date
-          ? new Date(item.date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-          : '';
-        const titleHTML = item.link
-          ? `<a href="${safeUrl(item.link)}" target="_blank" rel="noopener">${esc(item.title)}</a>`
-          : esc(item.title);
-        const imgHTML = item.image
-          ? `<img class="news-card-img" src="${safeUrl(item.image)}" alt="${esc(item.title)}" loading="lazy" />`
-          : '';
-        card.innerHTML = `
-          <div class="news-card-body-row">
-            <div class="news-card-text">
-              <div class="news-card-header">
-                <span class="news-title">${titleHTML}</span>
-                ${dateStr ? `<span class="news-date">${esc(dateStr)}</span>` : ''}
-              </div>
-              ${item.body ? `<p class="news-body">${esc(item.body)}</p>` : ''}
-            </div>
-            ${imgHTML}
-          </div>`;
-        frag.appendChild(card);
-      });
-      newsList.appendChild(frag);
-    } catch (_) {
-      newsStatus.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No news to display. Add entries to <code>news/news.json</code>.</p>';
-    }
-  }
-
   // ── Fetch and render career timeline ─────────────────────
   async function fetchTimeline() {
     const timeline = document.getElementById('timeline');
@@ -1365,7 +1338,6 @@
       await fetchProfile();
     } catch (_) { /* profile is non-critical */ }
 
-    fetchNews();
     fetchTimeline();
 
     try {
