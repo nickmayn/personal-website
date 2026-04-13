@@ -1546,34 +1546,50 @@
     return _eventsPromise;
   }
 
-  // ── Contribution heatmap (GitHub Events API) ─────────────
+  // ── Contribution heatmap (snapshot → GitHub Events API fallback) ──
   async function fetchAndRenderActivity() {
     const statusEl = document.getElementById('activity-status');
     const outerEl  = document.getElementById('heatmap-outer');
     const summaryEl = document.getElementById('activity-summary');
     try {
-      const events = await getPublicEvents();
+      let dayCounts = null;
+      let total = null;
 
-      // Build day counts for last 365 days
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const dayCounts = {};
-      for (let i = 364; i >= 0; i--) {
-        const d = new Date(today);
-        d.setDate(d.getDate() - i);
-        dayCounts[d.toISOString().slice(0, 10)] = 0;
-      }
-      events.forEach(ev => {
-        const day = ev.created_at.slice(0, 10);
-        if (day in dayCounts) {
-          const inc = ev.type === 'PushEvent'
-            ? (ev.payload?.commits?.length || 1)
-            : 1;
-          dayCounts[day] += inc;
+      // Try the pre-built snapshot (generated via GraphQL at deploy time)
+      try {
+        const snap = await fetch('data/contributions.json');
+        if (snap.ok) {
+          const data = await snap.json();
+          if (data && data.days && typeof data.totalContributions === 'number') {
+            dayCounts = data.days;
+            total = data.totalContributions;
+          }
         }
-      });
+      } catch (_) { /* no snapshot – fall through */ }
 
-      const total = Object.values(dayCounts).reduce((a, b) => a + b, 0);
+      // Fall back to the public Events API (≤ ~90 days, public only)
+      if (!dayCounts) {
+        const events = await getPublicEvents();
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        dayCounts = {};
+        for (let i = 364; i >= 0; i--) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          dayCounts[d.toISOString().slice(0, 10)] = 0;
+        }
+        events.forEach(ev => {
+          const day = ev.created_at.slice(0, 10);
+          if (day in dayCounts) {
+            const inc = ev.type === 'PushEvent'
+              ? (ev.payload?.commits?.length || 1)
+              : 1;
+            dayCounts[day] += inc;
+          }
+        });
+        total = Object.values(dayCounts).reduce((a, b) => a + b, 0);
+      }
+
       summaryEl.textContent = `${total} contributions in the last 365 days`;
 
       renderHeatmap(dayCounts);
