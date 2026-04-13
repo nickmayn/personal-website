@@ -708,6 +708,8 @@
     #about    { animation-delay: .08s; }
     #projects { animation-delay: .14s; }
     #tools    { animation-delay: .20s; }
+    #activity { animation-delay: .26s; }
+    #orgs     { animation-delay: .32s; }
 
     /* ── Project / tool card entrance ── */
     @keyframes cardIn {
@@ -824,6 +826,123 @@
       padding: .25rem .5rem;
       font-size: .78rem;
     }
+
+    /* ── GitHub Activity heatmap ── */
+    .activity-summary { font-size: .85rem; color: var(--muted); margin-bottom: 1rem; }
+    .heatmap-outer { }
+    .heatmap-scroll { overflow-x: auto; padding-bottom: .5rem; }
+    .heatmap-month-row {
+      position: relative;
+      height: 16px;
+      margin-bottom: 4px;
+      padding-left: 28px;
+    }
+    .heatmap-month-row span {
+      position: absolute;
+      font-size: .65rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .heatmap-body-row {
+      display: flex;
+      gap: 4px;
+      align-items: flex-start;
+    }
+    .heatmap-day-labels {
+      display: grid;
+      grid-template-rows: repeat(7, 14px);
+      gap: 3px;
+      width: 24px;
+      flex-shrink: 0;
+    }
+    .heatmap-day-labels span {
+      font-size: .65rem;
+      color: var(--muted);
+      line-height: 14px;
+      text-align: right;
+    }
+    .heatmap {
+      display: grid;
+      grid-template-rows: repeat(7, 14px);
+      grid-auto-flow: column;
+      grid-auto-columns: 14px;
+      gap: 3px;
+    }
+    .heatmap-cell {
+      border-radius: 2px;
+      background: var(--surface2);
+      cursor: default;
+      transition: transform .1s;
+    }
+    .heatmap-empty { background: transparent !important; pointer-events: none; }
+    .heatmap-cell[data-level="1"] { background: rgba(74,222,128,.25); }
+    .heatmap-cell[data-level="2"] { background: rgba(74,222,128,.50); }
+    .heatmap-cell[data-level="3"] { background: rgba(74,222,128,.75); }
+    .heatmap-cell[data-level="4"] { background: #4ade80; }
+    .heatmap-cell:not(.heatmap-empty):hover { transform: scale(1.3); z-index: 1; }
+    [data-theme="light"] .heatmap-cell[data-level="1"] { background: rgba(22,163,74,.20); }
+    [data-theme="light"] .heatmap-cell[data-level="2"] { background: rgba(22,163,74,.45); }
+    [data-theme="light"] .heatmap-cell[data-level="3"] { background: rgba(22,163,74,.70); }
+    [data-theme="light"] .heatmap-cell[data-level="4"] { background: #16a34a; }
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: .6rem;
+      justify-content: flex-end;
+    }
+    .legend-text { font-size: .75rem; color: var(--muted); margin: 0 2px; }
+    .legend-cell {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 2px;
+      background: var(--surface2);
+    }
+    .legend-cell[data-level="1"] { background: rgba(74,222,128,.25); }
+    .legend-cell[data-level="2"] { background: rgba(74,222,128,.50); }
+    .legend-cell[data-level="3"] { background: rgba(74,222,128,.75); }
+    .legend-cell[data-level="4"] { background: #4ade80; }
+    [data-theme="light"] .legend-cell[data-level="1"] { background: rgba(22,163,74,.20); }
+    [data-theme="light"] .legend-cell[data-level="2"] { background: rgba(22,163,74,.45); }
+    [data-theme="light"] .legend-cell[data-level="3"] { background: rgba(22,163,74,.70); }
+    [data-theme="light"] .legend-cell[data-level="4"] { background: #16a34a; }
+
+    /* ── Organizations ── */
+    .orgs-grid { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .org-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .4rem;
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: .85rem 1rem;
+      text-decoration: none;
+      color: var(--text);
+      min-width: 90px;
+      transition: border-color .15s, transform .15s, box-shadow .15s;
+    }
+    .org-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(232,232,232,.07);
+    }
+    [data-theme="light"] .org-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+    .org-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+    }
+    .org-name {
+      font-size: .75rem;
+      color: var(--muted);
+      text-align: center;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -870,6 +989,12 @@
       </a>
       <a href="#tools">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Tools &amp; Languages
+      </a>
+      <a href="#activity">
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Activity
+      </a>
+      <a href="#orgs">
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Organizations
       </a>
 
       <div style="margin-top:auto;padding-top:1rem">
@@ -976,6 +1101,52 @@
       </div>
     </section>
 
+    <!-- Activity -->
+    <section class="section" id="activity">
+      <div class="section-header">
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+        <h2>GitHub Activity</h2>
+      </div>
+      <p class="activity-summary" id="activity-summary"></p>
+      <div class="spinner-wrap" id="activity-status">
+        <div class="spinner"></div>
+        <p>Loading activity…</p>
+      </div>
+      <div class="heatmap-outer" id="heatmap-outer" style="display:none">
+        <div class="heatmap-scroll">
+          <div class="heatmap-month-row" id="heatmap-months"></div>
+          <div class="heatmap-body-row">
+            <div class="heatmap-day-labels">
+              <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
+            </div>
+            <div class="heatmap" id="heatmap"></div>
+          </div>
+        </div>
+        <div class="heatmap-legend">
+          <span class="legend-text">Less</span>
+          <span class="legend-cell" data-level="0"></span>
+          <span class="legend-cell" data-level="1"></span>
+          <span class="legend-cell" data-level="2"></span>
+          <span class="legend-cell" data-level="3"></span>
+          <span class="legend-cell" data-level="4"></span>
+          <span class="legend-text">More</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Organizations -->
+    <section class="section" id="orgs">
+      <div class="section-header">
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <h2>Organizations</h2>
+      </div>
+      <div class="spinner-wrap" id="orgs-status">
+        <div class="spinner"></div>
+        <p>Loading organizations…</p>
+      </div>
+      <div class="orgs-grid" id="orgs-grid" style="display:none"></div>
+    </section>
+
   </main>
 </div>
 
@@ -1016,7 +1187,7 @@
 
   // ── Active nav on scroll ─────────────────────────────────
   const navLinks = document.querySelectorAll('#sidebar-nav a');
-  const sections = ['about', 'projects', 'tools'].map(id => document.getElementById(id));
+  const sections = ['about', 'projects', 'tools', 'activity', 'orgs'].map(id => document.getElementById(id)).filter(Boolean);
 
   function updateActiveNav() {
     let current = sections[0].id;
@@ -1187,43 +1358,66 @@
     });
   }
 
+  // ── Fetch all language bytes across every repo ────────────
+  async function fetchAllLanguages(repos) {
+    const cacheKey = `langBytes_v1_${USERNAME}`;
+    try {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached);
+    } catch (_) {}
+
+    const langBytes = {};
+    const BATCH = 6;
+    for (let i = 0; i < repos.length; i += BATCH) {
+      const slice = repos.slice(i, i + BATCH);
+      const results = await Promise.all(
+        slice.map(r =>
+          fetch(`https://api.github.com/repos/${USERNAME}/${r.name}/languages`)
+            .then(res => res.ok ? res.json() : {})
+            .catch(() => ({}))
+        )
+      );
+      results.forEach(langs => {
+        Object.entries(langs).forEach(([l, b]) => {
+          langBytes[l] = (langBytes[l] || 0) + b;
+        });
+      });
+    }
+    try { sessionStorage.setItem(cacheKey, JSON.stringify(langBytes)); } catch (_) {}
+    return langBytes;
+  }
+
   // ── Tools section ─────────────────────────────────────────
-  function renderTools() {
-    // Language counts
-    const langCounts = {};
-    allRepos.forEach(r => {
-      if (r.language) langCounts[r.language] = (langCounts[r.language] || 0) + 1;
-    });
-
-    const sorted = Object.entries(langCounts).sort((a, b) => b[1] - a[1]);
-    const maxCount = sorted[0]?.[1] || 1;
-
-    // Total stars per language (bonus metric)
-    const langStars = {};
-    allRepos.forEach(r => {
-      if (r.language && r.stargazers_count > 0)
-        langStars[r.language] = (langStars[r.language] || 0) + r.stargazers_count;
-    });
+  async function renderTools() {
+    const grid     = document.getElementById('tools-grid');
+    const statusEl = document.getElementById('tools-status');
+    statusEl.style.display = 'block';
+    grid.innerHTML = '';
 
     // Total stars for About section
     const totalStars = allRepos.reduce((s, r) => s + r.stargazers_count, 0);
     document.getElementById('stat-stars').textContent = totalStars;
 
-    const grid = document.getElementById('tools-grid');
-    grid.innerHTML = '';
+    // Fetch all language bytes across all repos
+    const langBytes  = await fetchAllLanguages(allRepos);
+    const totalBytes = Object.values(langBytes).reduce((a, b) => a + b, 0) || 1;
+    const sorted     = Object.entries(langBytes).sort((a, b) => b[1] - a[1]);
 
-    sorted.forEach(([lang, count], i) => {
-      const color = LANG_COLORS[lang] || '#8b949e';
-      const pct   = Math.round((count / maxCount) * 100);
-      const card  = document.createElement('div');
-      card.className = 'tool-card';
+    statusEl.style.display = 'none';
+
+    sorted.forEach(([lang, bytes], i) => {
+      const color      = LANG_COLORS[lang] || '#8b949e';
+      const pct        = Math.round((bytes / totalBytes) * 100);
+      const displayPct = pct < 1 ? '<1' : pct;
+      const card       = document.createElement('div');
+      card.className   = 'tool-card';
       card.style.animationDelay = (i * 0.05) + 's';
       card.innerHTML = `
         <div class="tool-header">
           <span class="tool-dot" style="background:${color}"></span>
           <span class="tool-name">${lang}</span>
         </div>
-        <span class="tool-count">${count} repo${count !== 1 ? 's' : ''}</span>
+        <span class="tool-count">${displayPct}% of code</span>
         <div class="tool-bar-bg">
           <div class="tool-bar-fill" style="width:0;background:${color}" data-pct="${pct}"></div>
         </div>`;
@@ -1330,6 +1524,139 @@
     } catch (_) { /* no jobs file – silently skip */ }
   }
 
+  // ── Contribution heatmap (GitHub Events API) ─────────────
+  async function fetchAndRenderActivity() {
+    const statusEl = document.getElementById('activity-status');
+    const outerEl  = document.getElementById('heatmap-outer');
+    const summaryEl = document.getElementById('activity-summary');
+    try {
+      const events = [];
+      for (let page = 1; page <= 3; page++) {
+        const res = await fetch(
+          `https://api.github.com/users/${USERNAME}/events/public?per_page=100&page=${page}`
+        );
+        if (!res.ok) break;
+        const batch = await res.json();
+        if (!batch.length) break;
+        events.push(...batch);
+        if (batch.length < 100) break;
+      }
+
+      // Build day counts for last 90 days
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const dayCounts = {};
+      for (let i = 89; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        dayCounts[d.toISOString().slice(0, 10)] = 0;
+      }
+      events.forEach(ev => {
+        const day = ev.created_at.slice(0, 10);
+        if (day in dayCounts) {
+          const inc = ev.type === 'PushEvent'
+            ? (ev.payload?.commits?.length || 1)
+            : 1;
+          dayCounts[day] += inc;
+        }
+      });
+
+      const total = Object.values(dayCounts).reduce((a, b) => a + b, 0);
+      summaryEl.textContent = `${total} contributions in the last 90 days`;
+
+      renderHeatmap(dayCounts);
+      statusEl.style.display = 'none';
+      outerEl.style.display  = 'block';
+    } catch (_) {
+      statusEl.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Could not load activity data.</p>';
+    }
+  }
+
+  function activityLevel(count) {
+    if (count === 0) return 0;
+    if (count <= 2)  return 1;
+    if (count <= 5)  return 2;
+    if (count <= 10) return 3;
+    return 4;
+  }
+
+  function renderHeatmap(dayCounts) {
+    const heatmap  = document.getElementById('heatmap');
+    const monthsEl = document.getElementById('heatmap-months');
+    heatmap.innerHTML  = '';
+    monthsEl.innerHTML = '';
+
+    const days = Object.keys(dayCounts).sort();
+    // Day-of-week of first day (0=Sun…6=Sat); pad so columns start on Sunday
+    const startPad = new Date(days[0]).getDay();
+    const CELL_PX  = 17; // 14px cell + 3px gap
+    const LABEL_W  = 28; // day labels column width + gap
+
+    // Empty padding cells
+    for (let i = 0; i < startPad; i++) {
+      const el = document.createElement('div');
+      el.className = 'heatmap-cell heatmap-empty';
+      heatmap.appendChild(el);
+    }
+
+    // Data cells
+    days.forEach(day => {
+      const count = dayCounts[day];
+      const el = document.createElement('div');
+      el.className = 'heatmap-cell';
+      el.dataset.level = activityLevel(count);
+      el.title = `${day}: ${count} contribution${count !== 1 ? 's' : ''}`;
+      heatmap.appendChild(el);
+    });
+
+    // Month labels (absolute-positioned over the scroll container)
+    // Noon local time avoids DST boundary issues when formatting the month name
+    let lastMonth = '';
+    days.forEach((day, idx) => {
+      const month = day.slice(0, 7);
+      if (month !== lastMonth) {
+        lastMonth = month;
+        const col  = Math.floor((idx + startPad) / 7);
+        const span = document.createElement('span');
+        span.textContent = new Date(month + '-15T12:00:00').toLocaleString('default', { month: 'short' });
+        span.style.left  = (LABEL_W + col * CELL_PX) + 'px';
+        monthsEl.appendChild(span);
+      }
+    });
+  }
+
+  // ── Organizations ─────────────────────────────────────────
+  async function fetchAndRenderOrgs() {
+    const statusEl = document.getElementById('orgs-status');
+    const gridEl   = document.getElementById('orgs-grid');
+    try {
+      const res = await fetch(`https://api.github.com/users/${USERNAME}/orgs`);
+      if (!res.ok) throw new Error('not ok');
+      const orgs = await res.json();
+      if (!orgs.length) {
+        document.getElementById('orgs').style.display = 'none';
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      orgs.forEach(org => {
+        const a = document.createElement('a');
+        a.className = 'org-card';
+        a.href      = `https://github.com/${esc(org.login)}`;
+        a.target    = '_blank';
+        a.rel       = 'noopener';
+        a.innerHTML = `
+          <img class="org-avatar" src="${esc(org.avatar_url)}" alt="${esc(org.login)} logo" loading="lazy" />
+          <span class="org-name">${esc(org.login)}</span>`;
+        frag.appendChild(a);
+      });
+      gridEl.appendChild(frag);
+      statusEl.style.display = 'none';
+      gridEl.style.display   = 'flex';
+    } catch (_) {
+      statusEl.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Could not load organizations.</p>';
+    }
+  }
+
   // ── Init ──────────────────────────────────────────────────
   async function init() {
     const projStatus = document.getElementById('proj-status');
@@ -1339,6 +1666,8 @@
     } catch (_) { /* profile is non-critical */ }
 
     fetchTimeline();
+    fetchAndRenderActivity();
+    fetchAndRenderOrgs();
 
     try {
       allRepos = await fetchAllRepos();
