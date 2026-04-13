@@ -1023,10 +1023,6 @@
       </div>
       <div class="about-grid" id="about-stats">
         <div class="stat-card">
-          <span class="label">Years of Experience</span>
-          <span class="value" id="stat-total-yrs">—</span>
-        </div>
-        <div class="stat-card">
           <span class="label">Software Dev Yrs</span>
           <span class="value" id="stat-sw-yrs">—</span>
         </div>
@@ -1037,10 +1033,6 @@
         <div class="stat-card">
           <span class="label">Data Engineering Yrs</span>
           <span class="value" id="stat-de-yrs">—</span>
-        </div>
-        <div class="stat-card">
-          <span class="label">Roles Held</span>
-          <span class="value" id="stat-roles">—</span>
         </div>
       </div>
       <div class="about-bio">
@@ -1530,11 +1522,9 @@
     const dsYrs    = Math.floor(dsMs / (365.25 * 24 * 3600 * 1000));
     const deYrs    = Math.floor(deMs / (365.25 * 24 * 3600 * 1000));
 
-    document.getElementById('stat-total-yrs').textContent = totalYrs + '+';
     document.getElementById('stat-sw-yrs').textContent    = swDevYrs + '+';
     document.getElementById('stat-ds-yrs').textContent    = dsYrs + '+';
-    document.getElementById('stat-de-yrs').textContent    = deYrs + '+';
-    document.getElementById('stat-roles').textContent     = jobs.length;
+    document.getElementById('stat-de-yrs').textContent    = '4+';
   }
 
   // ── Fetch and render career timeline ─────────────────────
