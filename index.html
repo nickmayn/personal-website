@@ -24,6 +24,31 @@
       --glow:      rgba(88,166,255,.15);
     }
 
+    [data-theme="light"] {
+      --bg:       #f6f8fa;
+      --surface:  #ffffff;
+      --surface2: #eaf0f6;
+      --border:   #d0d7de;
+      --accent:   #0969da;
+      --accent2:  #8250df;
+      --text:     #1f2328;
+      --muted:    #57606a;
+      --green:    #1a7f37;
+      --red:      #cf222e;
+      --star:     #9a6700;
+      --glow:     rgba(9,105,218,.12);
+    }
+
+    /* smooth theme transition on key structural elements */
+    body,
+    .sidebar, .topbar, .content,
+    .card, .tool-card, .timeline-card, .news-card, .stat-card,
+    .about-bio, .section-header, .sidebar nav a,
+    .theme-toggle, .proj-controls input, .proj-controls select,
+    .timeline-tag, .topic-tag, .topic-chip, .fork-badge {
+      transition: background-color .22s ease, border-color .22s ease, color .22s ease, box-shadow .22s ease;
+    }
+
     body {
       background: radial-gradient(ellipse at 20% 10%, rgba(88,166,255,.07) 0%, var(--bg) 55%),
                   radial-gradient(ellipse at 80% 90%, rgba(167,139,250,.05) 0%, transparent 55%),
@@ -33,6 +58,11 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+    }
+    [data-theme="light"] body {
+      background: radial-gradient(ellipse at 20% 10%, rgba(9,105,218,.05) 0%, var(--bg) 55%),
+                  radial-gradient(ellipse at 80% 90%, rgba(130,80,223,.04) 0%, transparent 55%),
+                  var(--bg);
     }
 
     /* ── Mobile top bar ── */
@@ -703,6 +733,62 @@
       transform: translateY(-3px);
       box-shadow: 0 4px 20px rgba(88,166,255,.1);
     }
+    /* ── Timeline bullet list ── */
+    .timeline-bullets {
+      list-style: none;
+      padding: 0;
+      margin: .45rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .timeline-bullets li {
+      font-size: .84rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-left: 1.1rem;
+      position: relative;
+    }
+    .timeline-bullets li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: .7rem;
+      top: .18em;
+    }
+
+    /* ── Theme toggle button ── */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: .82rem;
+      padding: .4rem .75rem;
+      width: 100%;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); color: var(--text); }
+    .theme-toggle svg { flex-shrink: 0; }
+
+    /* hide one icon depending on mode */
+    .icon-moon { display: inline-block; }
+    .icon-sun  { display: none; }
+    [data-theme="light"] .icon-moon { display: none; }
+    [data-theme="light"] .icon-sun  { display: inline-block; }
+
+    /* topbar theme toggle (small) */
+    .topbar .theme-toggle {
+      width: auto;
+      margin-left: auto;
+      padding: .25rem .5rem;
+      font-size: .78rem;
+    }
   </style>
 </head>
 <body>
@@ -718,6 +804,10 @@
 <div class="topbar">
   <button class="hamburger" id="hamburger" aria-label="Open menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <span class="site-title">Nick Maynard</span>
+  <button class="theme-toggle" id="theme-toggle-top" aria-label="Toggle theme">
+    <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <svg class="icon-sun"  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
 </div>
 <div class="sidebar-overlay" id="overlay"></div>
 
@@ -749,6 +839,14 @@
       <a href="#tools">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span> Tools &amp; Languages
       </a>
+
+      <div style="margin-top:auto;padding-top:1rem">
+        <button class="theme-toggle" id="theme-toggle-sidebar" aria-label="Toggle theme">
+          <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <svg class="icon-sun"  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <span id="theme-label">Light mode</span>
+        </button>
+      </div>
     </nav>
 
   </aside>
@@ -1223,6 +1321,9 @@
         const tagsHTML = (job.tags || []).length
           ? `<div class="timeline-tags">${job.tags.map(t => `<span class="timeline-tag">${esc(t)}</span>`).join('')}</div>`
           : '';
+        const bulletsHTML = (job.bullets || []).length
+          ? `<ul class="timeline-bullets">${job.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>`
+          : (job.description ? `<p class="timeline-desc">${esc(job.description)}</p>` : '');
         const logoHTML = job.logo
           ? `<img class="timeline-logo" src="${safeUrl(job.logo)}" alt="${esc(job.company)} logo" loading="lazy" />`
           : '';
@@ -1237,7 +1338,7 @@
               ${logoHTML}
             </div>
             <div class="timeline-company">${esc(job.company)}</div>
-            ${job.description ? `<p class="timeline-desc">${esc(job.description)}</p>` : ''}
+            ${bulletsHTML}
             ${tagsHTML}
           </div>`;
         frag.appendChild(item);
@@ -1301,6 +1402,30 @@
       card.style.setProperty('--my', (e.clientY - r.top)  + 'px');
     });
   });
+
+  // ── Theme toggle ──────────────────────────────────────────
+  function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    const label = document.getElementById('theme-label');
+    if (label) label.textContent = theme === 'light' ? 'Dark mode' : 'Light mode';
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.dataset.theme;
+    const next = current === 'light' ? 'dark' : 'light';
+    localStorage.setItem('theme', next);
+    applyTheme(next);
+  }
+
+  function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    applyTheme(theme);
+    document.getElementById('theme-toggle-sidebar')?.addEventListener('click', toggleTheme);
+    document.getElementById('theme-toggle-top')?.addEventListener('click', toggleTheme);
+  }
+  initTheme();
 
   init();
 </script>
