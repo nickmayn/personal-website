@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nick Maynard - Portfolio</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230c0c0c'/><text x='50' y='72' text-anchor='middle' font-size='52' font-weight='800' font-family='system-ui,sans-serif' fill='%23e8e8e8'>NM</text></svg>" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1019,20 +1020,20 @@
       </div>
       <div class="about-grid" id="about-stats">
         <div class="stat-card">
-          <span class="label">Public Repos</span>
-          <span class="value" id="stat-repos">—</span>
+          <span class="label">Years of Experience</span>
+          <span class="value" id="stat-total-yrs">—</span>
         </div>
         <div class="stat-card">
-          <span class="label">Followers</span>
-          <span class="value" id="stat-followers">—</span>
+          <span class="label">Data Science Yrs</span>
+          <span class="value" id="stat-ds-yrs">—</span>
         </div>
         <div class="stat-card">
-          <span class="label">Following</span>
-          <span class="value" id="stat-following">—</span>
+          <span class="label">Data Engineering Yrs</span>
+          <span class="value" id="stat-de-yrs">—</span>
         </div>
         <div class="stat-card">
-          <span class="label">Total Stars</span>
-          <span class="value" id="stat-stars">—</span>
+          <span class="label">Roles Held</span>
+          <span class="value" id="stat-roles">—</span>
         </div>
       </div>
       <div class="about-bio">
@@ -1212,11 +1213,6 @@
     if (d.bio) document.getElementById('sb-bio').textContent = d.bio;
     document.getElementById('sb-gh-link').href = d.html_url;
 
-    // About stats
-    document.getElementById('stat-repos').textContent     = d.public_repos ?? '—';
-    document.getElementById('stat-followers').textContent = d.followers    ?? '—';
-    document.getElementById('stat-following').textContent = d.following    ?? '—';
-
     // Bio paragraph in About
     const bioEl = document.getElementById('about-gh-bio');
     if (d.bio) {
@@ -1394,10 +1390,6 @@
     statusEl.style.display = 'block';
     grid.innerHTML = '';
 
-    // Total stars for About section
-    const totalStars = allRepos.reduce((s, r) => s + r.stargazers_count, 0);
-    document.getElementById('stat-stars').textContent = totalStars;
-
     // Fetch all language bytes across all repos
     const langBytes  = await fetchAllLanguages(allRepos);
     const totalBytes = Object.values(langBytes).reduce((a, b) => a + b, 0) || 1;
@@ -1472,6 +1464,56 @@
     } catch (_) { return '#'; }
   }
 
+  // ── Experience stats (computed from jobs.json) ────────────
+  function renderExperienceStats(jobs) {
+    const MONTH_MAP = {
+      Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5,
+      Jul:6, Aug:7, Sep:8, Sept:8, Oct:9, Nov:10, Dec:11
+    };
+    const now = new Date();
+
+    function parseDate(s) {
+      s = s.trim();
+      if (s === 'Present') return now;
+      const parts = s.split(/\s+/);
+      const mon = MONTH_MAP[parts[0]];
+      const yr  = parseInt(parts[1], 10);
+      return new Date(yr, mon ?? 0, 1);
+    }
+
+    function parsePeriod(period) {
+      // handles em-dash (—), en-dash (–), or hyphen
+      const parts = period.split(/\s*[\u2014\u2013\-]\s*/);
+      if (parts.length < 2) return null;
+      return { start: parseDate(parts[0]), end: parseDate(parts[parts.length - 1]) };
+    }
+
+    function yearsDiff(start, end) {
+      return (end - start) / (365.25 * 24 * 3600 * 1000);
+    }
+
+    let earliest = null;
+    let dsMs = 0, deMs = 0;
+
+    jobs.forEach(job => {
+      const p = parsePeriod(job.period || '');
+      if (!p || isNaN(p.start) || isNaN(p.end)) return;
+      if (!earliest || p.start < earliest) earliest = p.start;
+      const ms = p.end - p.start;
+      if (/data.scient/i.test(job.title))   dsMs += ms;
+      if (/data.engineer/i.test(job.title)) deMs += ms;
+    });
+
+    const totalYrs = earliest ? Math.floor(yearsDiff(earliest, now)) : 0;
+    const dsYrs    = Math.floor(dsMs / (365.25 * 24 * 3600 * 1000));
+    const deYrs    = Math.floor(deMs / (365.25 * 24 * 3600 * 1000));
+
+    document.getElementById('stat-total-yrs').textContent = totalYrs + '+';
+    document.getElementById('stat-ds-yrs').textContent    = dsYrs + '+';
+    document.getElementById('stat-de-yrs').textContent    = deYrs + '+';
+    document.getElementById('stat-roles').textContent     = jobs.length;
+  }
+
   // ── Fetch and render career timeline ─────────────────────
   async function fetchTimeline() {
     const timeline = document.getElementById('timeline');
@@ -1481,6 +1523,10 @@
       if (!res.ok) throw new Error('not found');
       const jobs = await res.json();
       if (!jobs.length) return;
+
+      // Compute and render experience stats from the jobs timeline
+      renderExperienceStats(jobs);
+
       const frag = document.createDocumentFragment();
       jobs.forEach(job => {
         const item = document.createElement('div');
