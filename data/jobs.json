@@ -24,32 +24,71 @@
   },
   {
     "title": "Senior Data Scientist",
-    "company": "MITRE • McLean, VA",
-    "period": "Apr 2022 — Jan 2025",
+    "company": "MITRE • McLean, Virginia, United States",
+    "period": "Apr 2022 — Sep 2023",
     "bullets": [
-      "Led a 5-person team to deliver a production UI and REST API for an analytic tool, ensuring secure, reliable operations."
+      "Led a team in developing and maintaining a UI/API.",
+      "Developed various stochastic related ML models to assist in decision making.",
+      "Prototyped a MLOps pipeline that connected with a UI / API.",
+      "Utilized spaCy to perform event extraction from text data.",
+      "Prototyped information theory based approach to anomaly detection.",
+      "Led department intern program for summer of 2022."
     ],
-    "tags": ["Data Science", "REST API", "Python"],
+    "tags": ["Fast API", "Apache Spark", "Python", "spaCy", "MLOps"],
     "current": false
   },
   {
-    "title": "Data Scientist",
-    "company": "MITRE Corporation • McLean, VA",
-    "period": "Nov 2020 — Apr 2022",
+    "title": "Intermediate Data Scientist",
+    "company": "MITRE Corporation • McLean, Virginia, United States",
+    "period": "Aug 2020 — Apr 2022",
     "bullets": [
-      "Performed sensor fusion to predict real-world events."
+      "Created optimization engine to assist in privacy preserving contact tracing.",
+      "Used Spark to preprocess large scale IP features and make ML based enrichments.",
+      "Leveraged Spark to leverage geospatial data and perform anomaly detection.",
+      "Experimented with various graph theory based/ML approaches to create a new method for graph structure similarity.",
+      "Contributed to backend API supporting front end Vue application.",
+      "Generated documentation with Sphinx/GitLab CI/CD."
     ],
-    "tags": ["Data Science", "Sensor Fusion", "Python"],
+    "tags": ["Apache Spark", "Python", "Graph Theory", "Vue", "Sphinx"],
     "current": false
   },
   {
-    "title": "Software Developer",
-    "company": "MITRE Corporation • McLean, VA",
-    "period": "Jun 2020 — Nov 2020",
+    "title": "Associate Software Developer",
+    "company": "MITRE Corporation • McLean, Virginia, United States",
+    "period": "Jun 2020 — Aug 2020",
     "bullets": [
-      "Built an ML-based approach to process Bluetooth data."
+      "Developed AI/ML based solutions to COVID privacy preserving contact tracing efforts.",
+      "Implemented pipelines for experimenting/deploying ML models.",
+      "Applied continuous integration for repos.",
+      "Generated docs using Sphinx and other auto-generating forms."
     ],
-    "tags": ["Python", "Machine Learning"],
+    "tags": ["Python", "Machine Learning", "CI/CD", "Sphinx"],
+    "current": false
+  },
+  {
+    "title": "Software Solutions Engineering Intern",
+    "company": "MITRE Corporation • McLean, Virginia",
+    "period": "May 2019 — Jun 2020",
+    "bullets": [
+      "Wrote SQL functions to help in reducing datasets efficiently.",
+      "Created and trained a model to help embed geospatial data into n-dimensional space.",
+      "Performed clustering in conjunction with trained embeddings to help predict similar entities.",
+      "Wrote packages to help manipulate dataframes to speed up embeddings.",
+      "Documented code to help future employees in usage."
+    ],
+    "tags": ["SQL", "Python", "Geospatial", "Machine Learning"],
+    "current": false
+  },
+  {
+    "title": "Data Analyst",
+    "company": "Virginia Tech Softball • Blacksburg, VA",
+    "period": "Jan 2019 — Jun 2020",
+    "bullets": [
+      "Collected data to be used by the team.",
+      "Created a series of programs to be used in analyzing information.",
+      "Led team of 5 analysts to create reports for coaching staff."
+    ],
+    "tags": ["Data Analysis", "Python"],
     "current": false
   }
 ]
