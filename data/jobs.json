@@ -1,27 +1,55 @@
 [
   {
-    "title": "Senior Software Engineer",
-    "company": "Stealth Startup",
-    "period": "2024 – Present",
-    "description": "Building data-intensive backend services and internal tooling for a pre-launch fintech product. Focus on API design, real-time pipelines, and developer experience.",
-    "tags": ["Python", "FastAPI", "PostgreSQL", "Kafka", "AWS"],
+    "title": "Senior Data Engineer",
+    "company": "Iron Eagle X • Stuttgart, Germany",
+    "period": "Jan 2025 — Present",
+    "bullets": [
+      "Led design and delivery of mission applications; one nominated for a SOCOM innovation award.",
+      "Engineered cross-domain data pipelines enabling instantaneous movement across red and yellow enclaves.",
+      "Partnered with stakeholders to translate mission requirements into technical backlogs, clarify acceptance criteria, and align delivery schedules."
+    ],
+    "tags": ["Data Engineering", "Pipelines", "Mission Applications"],
     "current": true
   },
   {
-    "title": "Software Engineer",
-    "company": "Previous Company",
-    "period": "2022 – 2024",
-    "description": "Developed and maintained ML-powered microservices, built data ingestion pipelines, and contributed to a full-stack React/Node.js product used by thousands of customers.",
-    "tags": ["Python", "React", "Node.js", "Docker", "GCP"],
-    "logo": "https://example.com/logo.png",
+    "title": "Lead Data Engineer",
+    "company": "Booz Allen Hamilton • Stuttgart, Germany",
+    "period": "Sept 2023 — Jan 2025",
+    "bullets": [
+      "Built an open-source data platform on Hadoop and Spark to ingest and manage multi-terabyte datasets.",
+      "Developed multiple web applications, deploying on Kubernetes in a secure cloud enclave for scalable and resilient access."
+    ],
+    "tags": ["Hadoop", "Spark", "Kubernetes", "Python"],
     "current": false
   },
   {
-    "title": "Junior Software Developer",
-    "company": "Earlier Company",
-    "period": "2020 – 2022",
-    "description": "Contributed to internal tooling and automation projects. Gained hands-on experience with Python, REST APIs, and relational databases in a production environment.",
-    "tags": ["Python", "Django", "PostgreSQL", "Git"],
+    "title": "Senior Data Scientist",
+    "company": "MITRE • McLean, VA",
+    "period": "Apr 2022 — Present",
+    "bullets": [
+      "Led a 5-person team to deliver a production UI and REST API for an analytic tool, ensuring secure, reliable operations."
+    ],
+    "tags": ["Data Science", "REST API", "Python"],
+    "current": true
+  },
+  {
+    "title": "Data Scientist",
+    "company": "MITRE Corporation • McLean, VA",
+    "period": "Nov 2020 — Apr 2022",
+    "bullets": [
+      "Performed sensor fusion to predict real-world events."
+    ],
+    "tags": ["Data Science", "Sensor Fusion", "Python"],
+    "current": false
+  },
+  {
+    "title": "Software Developer",
+    "company": "MITRE Corporation • McLean, VA",
+    "period": "Jun 2020 — Nov 2020",
+    "bullets": [
+      "Built an ML-based approach to process Bluetooth data."
+    ],
+    "tags": ["Python", "Machine Learning"],
     "current": false
   }
 ]
