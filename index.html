@@ -985,6 +985,9 @@
       <a href="#about" class="active">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> About
       </a>
+      <a href="#education">
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg></span> Education
+      </a>
       <a href="#projects">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span> Projects
       </a>
@@ -1057,6 +1060,18 @@
       <div class="timeline" id="timeline">
         <div class="timeline-line"></div>
         <!-- items injected by JS from data/jobs.json -->
+      </div>
+    </section>
+
+    <!-- Education -->
+    <section class="section" id="education">
+      <div class="section-header">
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg></span>
+        <h2>Education</h2>
+      </div>
+      <div class="timeline" id="edu-timeline">
+        <div class="timeline-line"></div>
+        <!-- items injected by JS from data/education.json -->
       </div>
     </section>
 
@@ -1188,7 +1203,7 @@
 
   // ── Active nav on scroll ─────────────────────────────────
   const navLinks = document.querySelectorAll('#sidebar-nav a');
-  const sections = ['about', 'projects', 'tools', 'activity', 'orgs'].map(id => document.getElementById(id)).filter(Boolean);
+  const sections = ['about', 'education', 'projects', 'tools', 'activity', 'orgs'].map(id => document.getElementById(id)).filter(Boolean);
 
   function updateActiveNav() {
     let current = sections[0].id;
@@ -1570,6 +1585,55 @@
     } catch (_) { /* no jobs file – silently skip */ }
   }
 
+  // ── Fetch and render education timeline ──────────────────
+  async function fetchEducation() {
+    const timeline = document.getElementById('edu-timeline');
+    if (!timeline) return;
+    try {
+      const res = await fetch('data/education.json');
+      if (!res.ok) throw new Error('not found');
+      const entries = await res.json();
+      if (!entries.length) return;
+
+      const frag = document.createDocumentFragment();
+      entries.forEach(edu => {
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        const gradeHTML = edu.grade
+          ? `<p class="timeline-desc">Grade: ${esc(edu.grade)}</p>`
+          : '';
+        const activitiesHTML = edu.activities
+          ? `<p class="timeline-desc">Activities and societies: ${esc(edu.activities)}</p>`
+          : '';
+        item.innerHTML = `
+          <div class="timeline-dot${edu.current ? ' current' : ''}"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-header-left">
+                <span class="timeline-title">${esc(edu.degree)}${edu.field ? `, ${esc(edu.field)}` : ''}</span>
+                ${edu.period ? `<span class="timeline-period">${esc(edu.period)}</span>` : ''}
+              </div>
+            </div>
+            <div class="timeline-company">${esc(edu.school)}</div>
+            ${gradeHTML}
+            ${activitiesHTML}
+          </div>`;
+        frag.appendChild(item);
+      });
+      timeline.appendChild(frag);
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      timeline.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+    } catch (_) { /* no education file – silently skip */ }
+  }
+
   // ── Shared events fetch (cached so activity + orgs share one request set) ──
   let _eventsPromise = null;
   function getPublicEvents() {
@@ -1764,6 +1828,7 @@
     } catch (_) { /* profile is non-critical */ }
 
     fetchTimeline();
+    fetchEducation();
     fetchAndRenderActivity();
     fetchAndRenderOrgs();
 

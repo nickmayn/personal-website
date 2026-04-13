@@ -1,0 +1,33 @@
+[
+  {
+    "degree": "Doctor of Philosophy - PhD",
+    "field": "Computational Science and Informatics",
+    "school": "George Mason University",
+    "period": "2021 – 2030",
+    "current": true
+  },
+  {
+    "degree": "Master of Science",
+    "field": "Computational Science and Informatics",
+    "school": "George Mason University",
+    "period": "Aug 2021 – Dec 2025",
+    "current": false
+  },
+  {
+    "degree": "Bachelor's Degree",
+    "field": "Computational Modeling and Data Analytics",
+    "school": "Virginia Tech",
+    "period": "2016 – 2020",
+    "grade": "Graduated",
+    "activities": "Curie Living Learning Community, CMDA Club",
+    "current": false
+  },
+  {
+    "degree": "Minor",
+    "field": "Mathematics",
+    "school": "Virginia Tech",
+    "period": "2016 – 2020",
+    "grade": "Graduated",
+    "current": false
+  }
+]
