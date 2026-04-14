@@ -9,7 +9,7 @@
       "Partnered with stakeholders to translate mission requirements into technical backlogs, clarify acceptance criteria, and align delivery schedules."
     ],
     "tags": ["Data Engineering", "Pipelines", "Mission Applications"],
-    "logo": "https://logo.clearbit.com/ironeaglex.com",
+    "logo": "logos/ironeaglex.png",
     "current": true
   },
   {
@@ -21,7 +21,7 @@
       "Developed multiple web applications, deploying on Kubernetes in a secure cloud enclave for scalable and resilient access."
     ],
     "tags": ["Hadoop", "Spark", "Kubernetes", "Python"],
-    "logo": "https://logo.clearbit.com/boozallen.com",
+    "logo": "logos/boozallen.png",
     "current": false
   },
   {
@@ -37,7 +37,7 @@
       "Led department intern program for summer of 2022."
     ],
     "tags": ["Fast API", "Apache Spark", "Python", "spaCy", "MLOps"],
-    "logo": "https://logo.clearbit.com/mitre.org",
+    "logo": "logos/mitre.png",
     "current": false
   },
   {
@@ -53,7 +53,7 @@
       "Generated documentation with Sphinx/GitLab CI/CD."
     ],
     "tags": ["Apache Spark", "Python", "Graph Theory", "Vue", "Sphinx"],
-    "logo": "https://logo.clearbit.com/mitre.org",
+    "logo": "logos/mitre.png",
     "current": false
   },
   {
@@ -67,7 +67,7 @@
       "Generated docs using Sphinx and other auto-generating forms."
     ],
     "tags": ["Python", "Machine Learning", "CI/CD", "Sphinx"],
-    "logo": "https://logo.clearbit.com/mitre.org",
+    "logo": "logos/mitre.png",
     "current": false
   },
   {
@@ -82,7 +82,7 @@
       "Documented code to help future employees in usage."
     ],
     "tags": ["SQL", "Python", "Geospatial", "Machine Learning"],
-    "logo": "https://logo.clearbit.com/mitre.org",
+    "logo": "logos/mitre.png",
     "current": false
   },
   {
@@ -95,7 +95,7 @@
       "Led team of 5 analysts to create reports for coaching staff."
     ],
     "tags": ["Data Analysis", "Python"],
-    "logo": "https://logo.clearbit.com/vt.edu",
+    "logo": "logos/vt.png",
     "current": false
   }
 ]
