@@ -710,7 +710,7 @@
     #projects { animation-delay: .14s; }
     #tools    { animation-delay: .20s; }
     #activity { animation-delay: .26s; }
-    #orgs     { animation-delay: .32s; }
+    #skills   { animation-delay: .32s; }
 
     /* ── Project / tool card entrance ── */
     @keyframes cardIn {
@@ -944,6 +944,92 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
+    /* ── Logo fallback ── */
+    .logo-wrap { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-init {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── Skills section ── */
+    .skills-bio {
+      margin-bottom: 1.25rem;
+    }
+    .skills-bio .highlight-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-top: .85rem;
+    }
+    .highlight-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: linear-gradient(135deg, rgba(232,232,232,.10), rgba(160,160,160,.05));
+      border: 1px solid rgba(232,232,232,.18);
+      border-radius: 20px;
+      font-size: .78rem;
+      color: var(--accent);
+      padding: .22rem .65rem;
+    }
+    [data-theme="light"] .highlight-chip {
+      background: linear-gradient(135deg, rgba(17,17,17,.06), rgba(85,85,85,.03));
+      border: 1px solid rgba(17,17,17,.14);
+    }
+    .skills-viz {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 1.75rem;
+      align-items: center;
+      margin-top: 1.25rem;
+    }
+    @media (max-width: 680px) {
+      .skills-viz { grid-template-columns: 1fr; }
+      .radar-svg { max-width: 220px; margin: 0 auto; display: block; }
+    }
+    .radar-svg { width: 100%; }
+    .radar-label {
+      font-size: 9px;
+      fill: var(--muted);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+    .radar-data {
+      transition: d .6s ease;
+    }
+    .skill-bar-item { margin-bottom: .85rem; }
+    .skill-bar-item:last-child { margin-bottom: 0; }
+    .skill-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: .3rem;
+    }
+    .skill-bar-name { font-size: .86rem; color: var(--text); font-weight: 600; }
+    .skill-bar-pct  { font-size: .76rem; color: var(--muted); }
+    .skill-bar-bg {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .65s cubic-bezier(.16,1,.3,1);
+    }
   </style>
 </head>
 <body>
@@ -997,8 +1083,8 @@
       <a href="#activity">
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Activity
       </a>
-      <a href="#orgs">
-        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Organizations
+      <a href="#skills">
+        <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> Skills
       </a>
 
       <div style="margin-top:auto;padding-top:1rem">
@@ -1022,6 +1108,10 @@
         <h2>About</h2>
       </div>
       <div class="about-grid" id="about-stats">
+        <div class="stat-card">
+          <span class="label">Roles Held</span>
+          <span class="value" id="stat-roles">—</span>
+        </div>
         <div class="stat-card">
           <span class="label">Software Dev Yrs</span>
           <span class="value" id="stat-sw-yrs">—</span>
@@ -1146,17 +1236,36 @@
       </div>
     </section>
 
-    <!-- Organizations -->
-    <section class="section" id="orgs">
+    <!-- Skills & Expertise -->
+    <section class="section" id="skills">
       <div class="section-header">
-        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-        <h2>Organizations</h2>
+        <span class="section-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+        <h2>Skills &amp; Expertise</h2>
       </div>
-      <div class="spinner-wrap" id="orgs-status">
-        <div class="spinner"></div>
-        <p>Loading organizations…</p>
+      <div class="about-bio skills-bio">
+        <p>
+          I bridge the gap between raw data and real-world impact — designing high-throughput pipelines in
+          secure government environments, leading ML research at a nationally recognized R&amp;D center, and
+          building full-stack applications deployed on Kubernetes in classified cloud enclaves.
+        </p>
+        <p>
+          Currently pursuing a PhD in Computational Science while shipping production-grade data systems
+          across defense and intelligence sectors. I bring both the academic rigor to prototype novel
+          approaches and the engineering discipline to take them to production.
+        </p>
+        <div class="highlight-chips">
+          <span class="highlight-chip">🔒 Security-cleared environments</span>
+          <span class="highlight-chip">🎓 PhD Candidate</span>
+          <span class="highlight-chip">🛰️ SOCOM innovation nominee</span>
+          <span class="highlight-chip">🌍 International deployments</span>
+          <span class="highlight-chip">📊 Multi-terabyte pipelines</span>
+          <span class="highlight-chip">🤝 Team leadership</span>
+        </div>
       </div>
-      <div class="orgs-grid" id="orgs-grid" style="display:none"></div>
+      <div class="skills-viz">
+        <div id="skills-radar-container"></div>
+        <div id="skills-bars"></div>
+      </div>
     </section>
 
   </main>
@@ -1199,7 +1308,7 @@
 
   // ── Active nav on scroll ─────────────────────────────────
   const navLinks = document.querySelectorAll('#sidebar-nav a');
-  const sections = ['about', 'education', 'projects', 'tools', 'activity', 'orgs'].map(id => document.getElementById(id)).filter(Boolean);
+  const sections = ['about', 'education', 'projects', 'tools', 'activity', 'skills'].map(id => document.getElementById(id)).filter(Boolean);
 
   function updateActiveNav() {
     let current = sections[0].id;
@@ -1475,6 +1584,15 @@
     } catch (_) { return '#'; }
   }
 
+  // ── Logo fallback ─────────────────────────────────────────
+  // Called by onerror on timeline logo images: hides the broken image and
+  // reveals the adjacent letter-initial badge.
+  function handleLogoError(img) {
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling;
+    if (fallback) fallback.style.display = 'flex';
+  }
+
   // ── Experience stats (computed from jobs.json) ────────────
   function renderExperienceStats(jobs) {
     const MONTH_MAP = {
@@ -1522,6 +1640,7 @@
     const dsYrs    = Math.floor(dsMs / (365.25 * 24 * 3600 * 1000));
     const deYrs    = Math.floor(deMs / (365.25 * 24 * 3600 * 1000));
 
+    document.getElementById('stat-roles').textContent    = jobs.length;
     document.getElementById('stat-sw-yrs').textContent    = swDevYrs + '+';
     document.getElementById('stat-ds-yrs').textContent    = dsYrs + '+';
     document.getElementById('stat-de-yrs').textContent    = '4+';
@@ -1550,8 +1669,10 @@
         const bulletsHTML = (job.bullets || []).length
           ? `<ul class="timeline-bullets">${job.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>`
           : (job.description ? `<p class="timeline-desc">${esc(job.description)}</p>` : '');
+        // Extract initial from company name (before bullet separator used in multi-company entries)
+        const companyInitial = (job.company || '?').split(/[\u2022•]/)[0].trim().charAt(0).toUpperCase();
         const logoHTML = job.logo
-          ? `<img class="timeline-logo" src="${safeUrl(job.logo)}" alt="${esc(job.company)} logo" loading="lazy" />`
+          ? `<span class="logo-wrap"><img class="timeline-logo" src="${safeUrl(job.logo)}" alt="${esc(job.company)} logo" loading="lazy" onerror="handleLogoError(this)" /><span class="logo-init">${esc(companyInitial)}</span></span>`
           : '';
         item.innerHTML = `
           <div class="timeline-dot${job.current ? ' current' : ''}"></div>
@@ -1603,8 +1724,9 @@
         const activitiesHTML = edu.activities
           ? `<p class="timeline-desc">Activities and societies: ${esc(edu.activities)}</p>`
           : '';
+        const schoolInitial = (edu.school || '?').charAt(0).toUpperCase();
         const logoHTML = edu.logo
-          ? `<img class="timeline-logo" src="${safeUrl(edu.logo)}" alt="${esc(edu.school)} logo" loading="lazy" />`
+          ? `<span class="logo-wrap"><img class="timeline-logo" src="${safeUrl(edu.logo)}" alt="${esc(edu.school)} logo" loading="lazy" onerror="handleLogoError(this)" /><span class="logo-init">${esc(schoolInitial)}</span></span>`
           : '';
         item.innerHTML = `
           <div class="timeline-dot${edu.current ? ' current' : ''}"></div>
@@ -1765,59 +1887,96 @@
     });
   }
 
-  // ── Organizations ─────────────────────────────────────────
-  async function fetchAndRenderOrgs() {
-    const statusEl = document.getElementById('orgs-status');
-    const gridEl   = document.getElementById('orgs-grid');
-    try {
-      // Fetch current public org memberships and recent events in parallel
-      const [orgsRes, events] = await Promise.all([
-        fetch(`https://api.github.com/users/${USERNAME}/orgs`),
-        getPublicEvents().catch(() => []),
-      ]);
-      if (!orgsRes.ok) throw new Error('not ok');
-      const apiOrgs = await orgsRes.json();
+  // ── Skills radar chart ────────────────────────────────────
+  function renderSkillsSection() {
+    const skills = [
+      { name: 'Data Engineering',  abbr: 'DE',  value: 95, color: '#4ade80' },
+      { name: 'ML & AI',           abbr: 'ML',  value: 90, color: '#60a5fa' },
+      { name: 'Software Dev',      abbr: 'SD',  value: 90, color: '#a78bfa' },
+      { name: 'Cloud & DevOps',    abbr: 'CD',  value: 80, color: '#fb923c' },
+      { name: 'Research',          abbr: 'Re',  value: 85, color: '#f472b6' },
+      { name: 'Leadership',        abbr: 'Le',  value: 75, color: '#facc15' },
+    ];
 
-      // Build a map of login → org object from API results
-      const orgMap = new Map(apiOrgs.map(o => [o.login.toLowerCase(), o]));
+    const n  = skills.length;
+    const cx = 130, cy = 130, r = 100;
+    const levels = 4;
+    const angles = skills.map((_, i) => (i / n) * 2 * Math.PI - Math.PI / 2);
 
-      // Supplement with any orgs inferred from event repo names
-      events.forEach(ev => {
-        const repoName = ev.repo?.name;
-        if (!repoName) return;
-        const owner = repoName.split('/')[0];
-        if (!owner || owner.toLowerCase() === USERNAME.toLowerCase()) return;
-        const key = owner.toLowerCase();
-        if (!orgMap.has(key)) {
-          orgMap.set(key, {
-            login:      owner,
-            avatar_url: `https://avatars.githubusercontent.com/${encodeURIComponent(owner)}?v=4`,
-          });
-        }
-      });
+    function pt(angle, radius) {
+      return [cx + radius * Math.cos(angle), cy + radius * Math.sin(angle)];
+    }
+    function toPath(pts) {
+      return pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`).join(' ') + ' Z';
+    }
 
-      if (!orgMap.size) {
-        document.getElementById('orgs').style.display = 'none';
-        return;
-      }
+    const gridPaths = Array.from({ length: levels }, (_, i) => {
+      const pts = angles.map(a => pt(a, r * (i + 1) / levels));
+      return `<path d="${toPath(pts)}" fill="none" stroke="var(--border)" stroke-width="1" />`;
+    }).join('');
 
-      const frag = document.createDocumentFragment();
-      orgMap.forEach(org => {
-        const a = document.createElement('a');
-        a.className = 'org-card';
-        a.href      = `https://github.com/${esc(org.login)}`;
-        a.target    = '_blank';
-        a.rel       = 'noopener';
-        a.innerHTML = `
-          <img class="org-avatar" src="${esc(org.avatar_url)}" alt="${esc(org.login)} logo" loading="lazy" />
-          <span class="org-name">${esc(org.login)}</span>`;
-        frag.appendChild(a);
-      });
-      gridEl.appendChild(frag);
-      statusEl.style.display = 'none';
-      gridEl.style.display   = 'flex';
-    } catch (_) {
-      statusEl.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Could not load organizations.</p>';
+    const axisLines = angles.map(a => {
+      const [x, y] = pt(a, r);
+      return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="var(--border)" stroke-width="1" />`;
+    }).join('');
+
+    const dataPts = skills.map((s, i) => pt(angles[i], r * s.value / 100));
+    const dataPath = toPath(dataPts);
+
+    const dots = dataPts.map(([x, y]) =>
+      `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="var(--accent)" />`
+    ).join('');
+
+    const LABEL_R = r + 22;
+    const labels = skills.map((s, i) => {
+      const [x, y] = pt(angles[i], LABEL_R);
+      const cos = Math.cos(angles[i]);
+      const anchor = Math.abs(cos) < 0.15 ? 'middle' : (cos > 0 ? 'start' : 'end');
+      return `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${anchor}" dominant-baseline="middle" class="radar-label">${s.abbr}</text>`;
+    }).join('');
+
+    const radarContainer = document.getElementById('skills-radar-container');
+    if (radarContainer) {
+      radarContainer.innerHTML = `<svg viewBox="0 0 260 260" class="radar-svg">
+        <defs>
+          <linearGradient id="radarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(232,232,232,.22)" />
+            <stop offset="100%" stop-color="rgba(160,160,160,.08)" />
+          </linearGradient>
+        </defs>
+        ${gridPaths}
+        ${axisLines}
+        <path d="${dataPath}" fill="url(#radarGrad)" stroke="var(--accent)" stroke-width="1.5" />
+        ${dots}
+        ${labels}
+      </svg>`;
+    }
+
+    const barsContainer = document.getElementById('skills-bars');
+    if (barsContainer) {
+      barsContainer.innerHTML = skills.map(s => `
+        <div class="skill-bar-item">
+          <div class="skill-bar-header">
+            <span class="skill-bar-name">${s.name}</span>
+            <span class="skill-bar-pct">${s.value}%</span>
+          </div>
+          <div class="skill-bar-bg">
+            <div class="skill-bar-fill" data-pct="${s.value}" style="width:0;background:${s.color}"></div>
+          </div>
+        </div>`).join('');
+
+      // Animate bars with IntersectionObserver so they trigger when scrolled into view
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.skill-bar-fill').forEach(el => {
+              el.style.width = el.dataset.pct + '%';
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      observer.observe(barsContainer);
     }
   }
 
@@ -1832,7 +1991,7 @@
     fetchTimeline();
     fetchEducation();
     fetchAndRenderActivity();
-    fetchAndRenderOrgs();
+    renderSkillsSection();
 
     try {
       allRepos = await fetchAllRepos();
