@@ -1584,6 +1584,15 @@
     } catch (_) { return '#'; }
   }
 
+  // ── Logo fallback ─────────────────────────────────────────
+  // Called by onerror on timeline logo images: hides the broken image and
+  // reveals the adjacent letter-initial badge.
+  function handleLogoError(img) {
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling;
+    if (fallback) fallback.style.display = 'flex';
+  }
+
   // ── Experience stats (computed from jobs.json) ────────────
   function renderExperienceStats(jobs) {
     const MONTH_MAP = {
@@ -1660,9 +1669,10 @@
         const bulletsHTML = (job.bullets || []).length
           ? `<ul class="timeline-bullets">${job.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>`
           : (job.description ? `<p class="timeline-desc">${esc(job.description)}</p>` : '');
+        // Extract initial from company name (before bullet separator used in multi-company entries)
         const companyInitial = (job.company || '?').split(/[\u2022•]/)[0].trim().charAt(0).toUpperCase();
         const logoHTML = job.logo
-          ? `<span class="logo-wrap"><img class="timeline-logo" src="${safeUrl(job.logo)}" alt="${esc(job.company)} logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span class="logo-init">${esc(companyInitial)}</span></span>`
+          ? `<span class="logo-wrap"><img class="timeline-logo" src="${safeUrl(job.logo)}" alt="${esc(job.company)} logo" loading="lazy" onerror="handleLogoError(this)" /><span class="logo-init">${esc(companyInitial)}</span></span>`
           : '';
         item.innerHTML = `
           <div class="timeline-dot${job.current ? ' current' : ''}"></div>
@@ -1716,7 +1726,7 @@
           : '';
         const schoolInitial = (edu.school || '?').charAt(0).toUpperCase();
         const logoHTML = edu.logo
-          ? `<span class="logo-wrap"><img class="timeline-logo" src="${safeUrl(edu.logo)}" alt="${esc(edu.school)} logo" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><span class="logo-init">${esc(schoolInitial)}</span></span>`
+          ? `<span class="logo-wrap"><img class="timeline-logo" src="${safeUrl(edu.logo)}" alt="${esc(edu.school)} logo" loading="lazy" onerror="handleLogoError(this)" /><span class="logo-init">${esc(schoolInitial)}</span></span>`
           : '';
         item.innerHTML = `
           <div class="timeline-dot${edu.current ? ' current' : ''}"></div>
