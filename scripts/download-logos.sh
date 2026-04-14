@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Downloads company and school logos from Clearbit into logos/
-# Exits non-zero if any logo fails to download.
+# Warns but does not fail the pipeline if any logo cannot be downloaded.
 set -euo pipefail
 
 mkdir -p logos
@@ -31,6 +31,5 @@ for FILE in "${!LOGOS[@]}"; do
 done
 
 if [ "$FAILED" -ne 0 ]; then
-  echo "One or more logos could not be downloaded. Check the errors above." >&2
-  exit 1
+  echo "Warning: one or more logos could not be downloaded. The site will deploy without them." >&2
 fi
