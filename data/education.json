@@ -1,5 +1,13 @@
 [
   {
+    "degree": "Doctor of Philosophy - PhD",
+    "field": "Computational Science and Informatics",
+    "school": "George Mason University",
+    "period": "2021 – Present",
+    "logo": "logos/gmu.png",
+    "current": true
+  },
+  {
     "degree": "Master of Science",
     "field": "Computational Science and Informatics",
     "school": "George Mason University",
