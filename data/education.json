@@ -1,18 +1,10 @@
 [
   {
-    "degree": "Doctor of Philosophy - PhD",
-    "field": "Computational Science and Informatics",
-    "school": "George Mason University",
-    "period": "2021 – Present",
-    "logo": "https://logo.clearbit.com/gmu.edu",
-    "current": true
-  },
-  {
     "degree": "Master of Science",
     "field": "Computational Science and Informatics",
     "school": "George Mason University",
     "period": "Aug 2021 – Dec 2025",
-    "logo": "https://logo.clearbit.com/gmu.edu",
+    "logo": "logos/gmu.png",
     "current": false
   },
   {
@@ -22,7 +14,7 @@
     "period": "2016 – 2020",
     "grade": "Graduated",
     "activities": "Curie Living Learning Community, CMDA Club",
-    "logo": "https://logo.clearbit.com/vt.edu",
+    "logo": "logos/vt.png",
     "current": false
   },
   {
@@ -31,7 +23,7 @@
     "school": "Virginia Tech",
     "period": "2016 – 2020",
     "grade": "Graduated",
-    "logo": "https://logo.clearbit.com/vt.edu",
+    "logo": "logos/vt.png",
     "current": false
   }
 ]

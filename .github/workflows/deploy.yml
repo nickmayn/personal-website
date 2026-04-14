@@ -33,6 +33,9 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Download logos
+        run: bash scripts/download-logos.sh
+
       - name: Snapshot GitHub repos
         env:
           GH_USER: nickmayn
