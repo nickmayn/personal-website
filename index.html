@@ -46,7 +46,7 @@
     .card, .tool-card, .timeline-card, .news-card, .stat-card,
     .about-bio, .section-header, .sidebar nav a,
     .theme-toggle, .proj-controls input, .proj-controls select,
-    .timeline-tag, .topic-tag, .topic-chip, .fork-badge {
+    .timeline-tag, .topic-tag, .topic-chip, .fork-badge, .topic-filter-chip {
       transition: background-color .22s ease, border-color .22s ease, color .22s ease, box-shadow .22s ease;
     }
 
@@ -962,6 +962,79 @@
       flex-shrink: 0;
     }
 
+    /* ── Career tag cloud ── */
+    .career-tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-top: .25rem;
+    }
+    .career-tag-chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 20px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: default;
+      color: hsl(var(--tag-hue, 210), 65%, 70%);
+      transition: transform .15s, box-shadow .15s, filter .15s;
+    }
+    [data-theme="light"] .career-tag-chip {
+      color: hsl(var(--tag-hue, 210), 60%, 38%);
+    }
+    .career-tag-chip:hover {
+      transform: translateY(-2px) scale(1.06);
+      filter: brightness(1.15);
+    }
+    @keyframes chipIn {
+      from { opacity: 0; transform: translateY(10px) scale(.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .career-tag-chip { animation: chipIn .35s cubic-bezier(.16,1,.3,1) both; }
+
+    /* ── Project topic filter chips ── */
+    .topic-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      margin-bottom: .8rem;
+    }
+    .topic-filter-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: .76rem;
+      color: var(--muted);
+      padding: .2rem .65rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
+      user-select: none;
+    }
+    .topic-filter-chip:hover {
+      border-color: rgba(232,232,232,.4);
+      color: var(--text);
+    }
+    [data-theme="light"] .topic-filter-chip:hover {
+      border-color: rgba(17,17,17,.35);
+    }
+    .topic-filter-chip.active {
+      color: var(--bg);
+      border-color: transparent;
+      box-shadow: 0 2px 10px rgba(0,0,0,.25);
+    }
+    .topic-filter-clear {
+      background: none;
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      font-size: .76rem;
+      color: var(--muted);
+      padding: .2rem .65rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+      display: none;
+    }
+    .topic-filter-clear:hover { border-color: var(--accent); color: var(--text); }
+
     /* ── Skills section ── */
     .skills-bio {
       margin-bottom: 1.25rem;
@@ -1150,6 +1223,11 @@
         <div class="timeline-line"></div>
         <!-- items injected by JS from data/jobs.json -->
       </div>
+
+      <div id="career-tech-section" style="display:none">
+        <h3 class="subsection-title">Technology Stack</h3>
+        <div id="career-tag-cloud" class="career-tag-cloud"></div>
+      </div>
     </section>
 
     <!-- Education -->
@@ -1183,6 +1261,7 @@
         </select>
         <span id="proj-count"></span>
       </div>
+      <div id="topic-filters" class="topic-filters"></div>
       <div id="proj-status" class="spinner-wrap">
         <div class="spinner"></div>
         <p>Loading projects…</p>
@@ -1276,6 +1355,14 @@
   };
 
   let allRepos = [];
+  let activeTopicFilter = null;
+
+  // ── Tag color helper (consistent hue from tag name) ──────
+  function tagHue(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) & 0xffff;
+    return h % 360;
+  }
 
   // ── Mobile sidebar toggle ────────────────────────────────
   const sidebar  = document.getElementById('sidebar');
@@ -1406,6 +1493,7 @@
 
     let list = allRepos.filter(r => {
       if (lang && r.language !== lang) return false;
+      if (activeTopicFilter && !(r.topics || []).includes(activeTopicFilter)) return false;
       if (query) {
         return r.name.toLowerCase().includes(query) ||
                (r.description || '').toLowerCase().includes(query) ||
@@ -1484,6 +1572,119 @@
     }
     try { sessionStorage.setItem(cacheKey, JSON.stringify(langBytes)); } catch (_) {}
     return langBytes;
+  }
+
+  // ── Career tag cloud ──────────────────────────────────────
+  function renderCareerTagCloud(jobs) {
+    const cloud   = document.getElementById('career-tag-cloud');
+    const section = document.getElementById('career-tech-section');
+    if (!cloud || !section) return;
+
+    const tagCounts = {};
+    jobs.forEach(job => {
+      (job.tags || []).forEach(t => {
+        tagCounts[t] = (tagCounts[t] || 0) + 1;
+      });
+    });
+
+    const sorted   = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+    if (!sorted.length) return;
+
+    const maxCount = sorted[0][1];
+    cloud.innerHTML = '';
+    sorted.forEach(([tag, count], i) => {
+      const hue      = tagHue(tag);
+      const sizePct  = count / maxCount;
+      const fontSize = (0.72 + sizePct * 0.42).toFixed(2) + 'rem';
+      const padding  = `${0.18 + sizePct * 0.1}rem ${0.5 + sizePct * 0.2}rem`;
+      const bg       = `hsla(${hue},65%,55%,${(0.12 + sizePct * 0.14).toFixed(2)})`;
+      const border   = `hsla(${hue},65%,55%,${(0.30 + sizePct * 0.35).toFixed(2)})`;
+
+      const chip = document.createElement('span');
+      chip.className = 'career-tag-chip';
+      chip.textContent = tag;
+      chip.title = `Used in ${count} role${count !== 1 ? 's' : ''}`;
+      chip.style.cssText = `
+        font-size:${fontSize};
+        padding:${padding};
+        background:${bg};
+        border:1px solid ${border};
+        animation-delay:${(i * 0.04).toFixed(2)}s;
+        --tag-hue:${hue};
+      `;
+      cloud.appendChild(chip);
+    });
+
+    section.style.display = 'block';
+  }
+
+  // ── Project topic filter chips ────────────────────────────
+  function renderTopicFilters(repos) {
+    const container = document.getElementById('topic-filters');
+    if (!container) return;
+
+    const topicCounts = {};
+    repos.forEach(r => {
+      (r.topics || []).forEach(t => {
+        topicCounts[t] = (topicCounts[t] || 0) + 1;
+      });
+    });
+
+    const topTopics = Object.entries(topicCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 14)
+      .map(([t]) => t);
+
+    if (!topTopics.length) return;
+    container.innerHTML = '';
+
+    topTopics.forEach(topic => {
+      const hue   = tagHue(topic);
+      const chip  = document.createElement('span');
+      chip.className   = 'topic-filter-chip';
+      chip.textContent = topic;
+      chip.dataset.topic = topic;
+
+      chip.addEventListener('click', () => {
+        if (activeTopicFilter === topic) {
+          activeTopicFilter = null;
+          chip.classList.remove('active');
+          chip.style.background = '';
+          chip.style.color = '';
+          clearBtn.style.display = 'none';
+        } else {
+          // deactivate previous
+          container.querySelectorAll('.topic-filter-chip.active').forEach(el => {
+            el.classList.remove('active');
+            el.style.background = '';
+            el.style.color = '';
+          });
+          activeTopicFilter = topic;
+          chip.classList.add('active');
+          chip.style.background = `hsl(${hue},65%,50%)`;
+          chip.style.color = '#fff';
+          clearBtn.style.display = 'inline-flex';
+        }
+        renderProjects();
+      });
+
+      container.appendChild(chip);
+    });
+
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'topic-filter-clear';
+    clearBtn.textContent = '✕ clear';
+    clearBtn.addEventListener('click', () => {
+      activeTopicFilter = null;
+      container.querySelectorAll('.topic-filter-chip.active').forEach(el => {
+        el.classList.remove('active');
+        el.style.background = '';
+        el.style.color = '';
+      });
+      clearBtn.style.display = 'none';
+      renderProjects();
+    });
+    container.appendChild(clearBtn);
   }
 
   // ── Tools section ─────────────────────────────────────────
@@ -1641,6 +1842,9 @@
 
       // Compute and render experience stats from the jobs timeline
       renderExperienceStats(jobs);
+
+      // Render career tag cloud
+      renderCareerTagCloud(jobs);
 
       const frag = document.createDocumentFragment();
       jobs.forEach(job => {
@@ -1979,6 +2183,7 @@
     try {
       allRepos = await fetchAllRepos();
       populateLangFilter();
+      renderTopicFilters(allRepos);
       projStatus.style.display = 'none';
       renderProjects();
       renderTools();
