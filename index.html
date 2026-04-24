@@ -1359,9 +1359,9 @@
 
   // ── Tag color helper (consistent hue from tag name) ──────
   function tagHue(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) & 0xffff;
-    return h % 360;
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = (hash * 31 + str.charCodeAt(i)) & 0xffff;
+    return hash % 360;
   }
 
   // ── Mobile sidebar toggle ────────────────────────────────
@@ -1661,7 +1661,9 @@
           });
           activeTopicFilter = topic;
           chip.classList.add('active');
-          chip.style.background = `hsl(${hue},65%,50%)`;
+          // Use lightness 40% for yellow hues (55–75°) for better contrast, 48% otherwise
+          const l = (hue >= 55 && hue <= 75) ? 40 : 48;
+          chip.style.background = `hsl(${hue},65%,${l}%)`;
           chip.style.color = '#fff';
           clearBtn.style.display = 'inline-flex';
         }
@@ -1673,6 +1675,7 @@
 
     const clearBtn = document.createElement('button');
     clearBtn.className = 'topic-filter-clear';
+    clearBtn.setAttribute('aria-label', 'Clear topic filter');
     clearBtn.textContent = '✕ clear';
     clearBtn.addEventListener('click', () => {
       activeTopicFilter = null;
