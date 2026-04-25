@@ -38,16 +38,18 @@ jobs:
 
       - name: Snapshot GitHub repos
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_USER: nickmayn
         run: |
           mkdir -p data
           ALL_REPOS="[]"
           PAGE=1
           while true; do
-            BATCH=$(curl -sf \
+            BATCH=$(curl -s \
               -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/users/${GH_USER}/repos?per_page=100&page=${PAGE}&type=public")
-            if [ $? -ne 0 ] || [ -z "$BATCH" ] || ! echo "$BATCH" | jq -e 'type == "array"' > /dev/null 2>&1; then
+              -H "Authorization: bearer ${GH_TOKEN}" \
+              "https://api.github.com/users/${GH_USER}/repos?per_page=100&page=${PAGE}&type=public") || BATCH=""
+            if [ -z "$BATCH" ] || ! echo "$BATCH" | jq -e 'type == "array"' > /dev/null 2>&1; then
               echo "Warning: failed to fetch page ${PAGE} or response was not a JSON array; stopping."
               break
             fi
