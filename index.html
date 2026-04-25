@@ -313,7 +313,12 @@
       border-radius: 20px;
       font-size: .7rem;
       padding: .12rem .5rem;
+      animation: chipIn .3s cubic-bezier(.16,1,.3,1) both;
+      transition: background .15s, transform .15s;
     }
+    .timeline-tag:nth-child(2) { animation-delay: .04s; }
+    .timeline-tag:nth-child(3) { animation-delay: .08s; }
+    .timeline-tag:nth-child(n+4) { animation-delay: .12s; }
 
     /* ── Main content ── */
     .content {
@@ -480,7 +485,13 @@
       border-radius: 20px;
       font-size: .7rem;
       padding: .12rem .5rem;
+      animation: chipIn .3s cubic-bezier(.16,1,.3,1) both;
+      transition: background .15s, transform .15s;
     }
+    .topic-tag:nth-child(2) { animation-delay: .04s; }
+    .topic-tag:nth-child(3) { animation-delay: .08s; }
+    .topic-tag:nth-child(4) { animation-delay: .12s; }
+    .topic-tag:nth-child(n+5) { animation-delay: .16s; }
     [data-theme="light"] .topic-tag {
       background: rgba(17,17,17,.08);
     }
@@ -969,6 +980,14 @@
       gap: .45rem;
       margin-top: .25rem;
     }
+    @keyframes chipIn {
+      from { opacity: 0; transform: translateY(10px) scale(.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes tagGlow {
+      0%, 100% { box-shadow: 0 0 0 0 hsla(var(--tag-hue, 210), 65%, 55%, 0); }
+      50%       { box-shadow: 0 0 8px 3px hsla(var(--tag-hue, 210), 65%, 55%, .28); }
+    }
     .career-tag-chip {
       display: inline-flex;
       align-items: center;
@@ -978,19 +997,16 @@
       cursor: default;
       color: hsl(var(--tag-hue, 210), 65%, 70%);
       transition: transform .15s, box-shadow .15s, filter .15s;
+      animation: chipIn .35s cubic-bezier(.16,1,.3,1) both, tagGlow 3s ease-in-out infinite;
     }
     [data-theme="light"] .career-tag-chip {
       color: hsl(var(--tag-hue, 210), 60%, 38%);
     }
     .career-tag-chip:hover {
       transform: translateY(-2px) scale(1.06);
-      filter: brightness(1.15);
+      filter: brightness(1.2);
+      box-shadow: 0 4px 14px hsla(var(--tag-hue, 210), 65%, 55%, .45) !important;
     }
-    @keyframes chipIn {
-      from { opacity: 0; transform: translateY(10px) scale(.9); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .career-tag-chip { animation: chipIn .35s cubic-bezier(.16,1,.3,1) both; }
 
     /* ── Project topic filter chips ── */
     .topic-filters {
@@ -998,6 +1014,10 @@
       flex-wrap: wrap;
       gap: .35rem;
       margin-bottom: .8rem;
+    }
+    @keyframes activePulse {
+      0%, 100% { box-shadow: 0 2px 10px rgba(0,0,0,.25); }
+      50%       { box-shadow: 0 2px 16px hsla(var(--chip-hue, 210), 65%, 55%, .55), 0 0 0 3px hsla(var(--chip-hue, 210), 65%, 55%, .18); }
     }
     .topic-filter-chip {
       background: var(--surface2);
@@ -1009,18 +1029,20 @@
       cursor: pointer;
       transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
       user-select: none;
+      animation: chipIn .35s cubic-bezier(.16,1,.3,1) both;
     }
     .topic-filter-chip:hover {
-      border-color: rgba(232,232,232,.4);
+      border-color: hsl(var(--chip-hue, 210), 65%, 55%);
       color: var(--text);
     }
     [data-theme="light"] .topic-filter-chip:hover {
-      border-color: rgba(17,17,17,.35);
+      border-color: hsl(var(--chip-hue, 210), 60%, 38%);
     }
     .topic-filter-chip.active {
       color: var(--bg);
       border-color: transparent;
       box-shadow: 0 2px 10px rgba(0,0,0,.25);
+      animation: activePulse 2s ease-in-out infinite;
     }
     .topic-filter-clear {
       background: none;
@@ -1609,7 +1631,7 @@
         padding:${padding};
         background:${bg};
         border:1px solid ${border};
-        animation-delay:${(i * 0.04).toFixed(2)}s;
+        animation-delay:${(i * 0.04).toFixed(2)}s, ${(i * 0.4 % 3).toFixed(1)}s; /* chipIn delay, tagGlow phase offset */
         --tag-hue:${hue};
       `;
       cloud.appendChild(chip);
@@ -1638,12 +1660,13 @@
     if (!topTopics.length) return;
     container.innerHTML = '';
 
-    topTopics.forEach(topic => {
+    topTopics.forEach((topic, i) => {
       const hue   = tagHue(topic);
       const chip  = document.createElement('span');
       chip.className   = 'topic-filter-chip';
       chip.textContent = topic;
       chip.dataset.topic = topic;
+      chip.style.cssText = `--chip-hue:${hue}; animation-delay:${(i * 0.04).toFixed(2)}s;`;
 
       chip.addEventListener('click', () => {
         if (activeTopicFilter === topic) {
