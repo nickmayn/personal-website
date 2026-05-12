@@ -1161,6 +1161,23 @@
       /* Page setup */
       @page { margin: 1.8cm 1.5cm; size: A4; }
 
+      /* Force light-mode CSS variables so the CV always prints consistently
+         regardless of whether dark or light mode is currently active. */
+      :root {
+        --bg:       #ffffff !important;
+        --surface:  #fafafa !important;
+        --surface2: #f2f2f2 !important;
+        --border:   #e0e0e0 !important;
+        --accent:   #111111 !important;
+        --accent2:  #555555 !important;
+        --text:     #111111 !important;
+        --muted:    #6b6b6b !important;
+        --green:    #16a34a !important;
+        --red:      #dc2626 !important;
+        --star:     #ca8a04 !important;
+        --glow:     rgba(0,0,0,.05) !important;
+      }
+
       /* Reset body for print */
       *, *::before, *::after { box-sizing: border-box !important; }
 
