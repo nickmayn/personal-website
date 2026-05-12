@@ -1125,9 +1125,194 @@
       border-radius: 3px;
       transition: width .65s cubic-bezier(.16,1,.3,1);
     }
+
+    /* ── Export CV button ── */
+    .export-cv-btn {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      width: 100%;
+      padding: .45rem .7rem;
+      border-radius: var(--radius);
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .85rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background .12s, color .12s, border-color .12s;
+    }
+    .export-cv-btn:hover {
+      background: var(--surface2);
+      color: var(--text);
+      border-color: var(--accent2);
+    }
+    .export-cv-btn svg { flex-shrink: 0; }
+
+    /* ── Print / PDF export ── */
+    @media print {
+      /* Page setup */
+      @page { margin: 1.8cm 1.5cm; size: A4; }
+
+      /* Reset body for print */
+      *, *::before, *::after { box-sizing: border-box !important; }
+
+      body {
+        background: #fff !important;
+        color: #111 !important;
+        font-size: 10pt !important;
+        line-height: 1.45 !important;
+      }
+
+      /* Hide everything that is not the CV */
+      #aurora,
+      .topbar,
+      .sidebar-overlay,
+      .sidebar,
+      #projects,
+      #tools,
+      #activity,
+      .proj-controls,
+      #topic-filters,
+      #proj-status,
+      #grid,
+      #heatmap-outer,
+      #activity-status,
+      #activity-summary,
+      .career-tag-cloud,
+      #career-tech-section,
+      .export-cv-btn { display: none !important; }
+
+      /* Full-width layout — no sidebar */
+      .layout { display: block !important; }
+      .content { padding: 0 !important; }
+
+      /* Print-only CV header */
+      #cv-print-header { display: block !important; }
+
+      /* Section headings */
+      .section {
+        margin-bottom: 1.4em !important;
+        page-break-inside: avoid;
+      }
+      .section-header {
+        border-bottom: 1.5pt solid #111 !important;
+        margin-bottom: .6em !important;
+        padding-bottom: .3em !important;
+      }
+      .section-header h2 {
+        font-size: 11pt !important;
+        font-weight: 700 !important;
+        color: #111 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .08em !important;
+      }
+      .section-icon { display: none !important; }
+
+      /* About stats */
+      .about-grid {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: .4em !important;
+        margin-bottom: .8em !important;
+      }
+      .stat-card {
+        background: none !important;
+        border: 1pt solid #ccc !important;
+        padding: .25em .6em !important;
+        border-radius: 4pt !important;
+      }
+      .stat-card .label { font-size: 7.5pt !important; color: #555 !important; }
+      .stat-card .value {
+        font-size: 13pt !important;
+        font-weight: 700 !important;
+        background: none !important;
+        -webkit-text-fill-color: #111 !important;
+        color: #111 !important;
+      }
+
+      /* About bio */
+      .about-bio {
+        background: none !important;
+        border: none !important;
+        border-left: 2pt solid #aaa !important;
+        padding: .4em .8em !important;
+        font-size: 9.5pt !important;
+        color: #222 !important;
+      }
+      .subsection-title {
+        font-size: 9pt !important;
+        color: #555 !important;
+        border-bottom: .5pt solid #ccc !important;
+        margin: .9em 0 .5em !important;
+        padding-bottom: .25em !important;
+      }
+
+      /* Timeline */
+      .timeline-line { display: none !important; }
+      .timeline-item {
+        opacity: 1 !important;
+        transform: none !important;
+        padding-left: 0 !important;
+        margin-bottom: .8em !important;
+        page-break-inside: avoid !important;
+      }
+      .timeline-dot { display: none !important; }
+      .timeline-card {
+        background: none !important;
+        border: none !important;
+        border-left: 2pt solid #bbb !important;
+        border-radius: 0 !important;
+        padding: .3em .6em !important;
+        box-shadow: none !important;
+      }
+      .timeline-card:hover { transform: none !important; box-shadow: none !important; }
+      .timeline-title { font-size: 10pt !important; font-weight: 700 !important; color: #111 !important; }
+      .timeline-period { font-size: 8.5pt !important; color: #555 !important; }
+      .timeline-company { font-size: 9.5pt !important; color: #333 !important; margin-bottom: .2em !important; }
+      .timeline-desc { font-size: 9pt !important; color: #444 !important; }
+      .timeline-bullets { font-size: 9pt !important; color: #444 !important; padding-left: 1.2em !important; }
+      .timeline-tags { margin-top: .3em !important; }
+      .timeline-tag {
+        background: none !important;
+        border: .5pt solid #aaa !important;
+        color: #555 !important;
+        font-size: 7.5pt !important;
+        padding: .1em .35em !important;
+        border-radius: 3pt !important;
+      }
+      .timeline-logo { width: 22px !important; height: 22px !important; }
+
+      /* Skills */
+      .skills-viz { display: flex !important; gap: 1.5em !important; align-items: flex-start !important; }
+      .radar-svg { width: 160pt !important; height: 160pt !important; }
+      #skills-bars { flex: 1 !important; }
+      .skill-bar-name { font-size: 9pt !important; color: #111 !important; }
+      .skill-bar-pct  { font-size: 8.5pt !important; color: #555 !important; }
+      .skill-bar-bg { background: #e5e5e5 !important; }
+      .skill-bar-fill { transition: none !important; }
+
+      /* Links */
+      a { color: #1a1a1a !important; text-decoration: underline !important; }
+    }
   </style>
 </head>
 <body>
+
+<!-- Print-only CV header (hidden on screen, shown when printing) -->
+<div id="cv-print-header" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2pt solid #111;padding-bottom:.5em;margin-bottom:1em">
+    <div>
+      <div style="font-size:18pt;font-weight:800;letter-spacing:.02em;color:#111">Nick Maynard</div>
+      <div style="font-size:10pt;color:#444;margin-top:.2em">Senior Data Engineer</div>
+    </div>
+    <div style="font-size:8.5pt;color:#555;text-align:right;line-height:1.7">
+      <div>Stuttgart, Germany</div>
+      <div><a href="https://github.com/nickmayn" style="color:#333">github.com/nickmayn</a></div>
+      <div><a href="https://nickmayn.github.io/personal-website" style="color:#333">nickmayn.github.io/personal-website</a></div>
+    </div>
+  </div>
+</div>
 
 <!-- Aurora animated background blobs -->
 <div id="aurora" aria-hidden="true">
@@ -1182,7 +1367,11 @@
         <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> Skills
       </a>
 
-      <div style="margin-top:auto;padding-top:1rem">
+      <div style="margin-top:auto;padding-top:1rem;display:flex;flex-direction:column;gap:.5rem">
+        <button class="export-cv-btn" id="export-cv-btn" aria-label="Export CV as PDF">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CV as PDF
+        </button>
         <button class="theme-toggle" id="theme-toggle-sidebar" aria-label="Toggle theme">
           <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           <svg class="icon-sun"  width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -2279,6 +2468,20 @@
   document.getElementById('search').addEventListener('input', renderProjects);
   document.getElementById('sort').addEventListener('change', renderProjects);
   document.getElementById('lang-filter').addEventListener('change', renderProjects);
+
+  // ── Export CV as PDF ──────────────────────────────────────
+  document.getElementById('export-cv-btn').addEventListener('click', () => {
+    // Make all timeline items visible before printing (they may be hidden
+    // if the user hasn't scrolled past them yet)
+    document.querySelectorAll('.timeline-item').forEach(el => {
+      el.classList.add('visible');
+    });
+    // Ensure skill bars are fully rendered at their correct widths
+    document.querySelectorAll('.skill-bar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+    window.print();
+  });
 
   // ── Magic-card spotlight: track mouse per card ───────────────
   let _spotlightCards = [];
