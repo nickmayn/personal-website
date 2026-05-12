@@ -1875,18 +1875,21 @@
     }
 
     function matchesExperience(job, tagName, titlePattern) {
+      const normalizedTagName = normalizeTag(tagName);
       const tags = Array.isArray(job.tags) ? job.tags.map(normalizeTag) : [];
-      return tags.includes(normalizeTag(tagName)) || titlePattern.test(job.title || '');
+      return tags.includes(normalizedTagName) || titlePattern.test(job.title || '');
     }
 
     const dsIntervals = [];
     const deIntervals = [];
+    const DATA_SCIENTIST_TITLE = /data\s+scient/i;
+    const DATA_ENGINEER_TITLE = /data\s+engineer/i;
 
     jobs.forEach(job => {
       const p = parsePeriod(job.period || '');
       if (!p || isNaN(p.start) || isNaN(p.end)) return;
-      if (matchesExperience(job, 'Data Science', /data\s+scient/i)) dsIntervals.push(p);
-      if (matchesExperience(job, 'Data Engineering', /data\s+engineer/i)) deIntervals.push(p);
+      if (matchesExperience(job, 'Data Science', DATA_SCIENTIST_TITLE)) dsIntervals.push(p);
+      if (matchesExperience(job, 'Data Engineering', DATA_ENGINEER_TITLE)) deIntervals.push(p);
     });
 
     const dsMs = sumMergedDurations(dsIntervals);
