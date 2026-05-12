@@ -97,6 +97,30 @@
     "tags": ["Data Analysis", "Python"],
     "logo": "logos/vt.png",
     "current": false
+  },
+  {
+    "title": "Analytics Intern",
+    "company": "Fuel and Tire Saver Systems • Inside Sales & Analytics",
+    "period": "2017",
+    "bullets": [
+      "Performed web scraping to identify and compile potential client leads.",
+      "Communicated directly with clients to support sales and analytics initiatives."
+    ],
+    "tags": ["Data Analytics", "Web Scraping", "Data Engineering"],
+    "logo": "",
+    "current": false
+  },
+  {
+    "title": "Student Maintenance Technician",
+    "company": "Virginia Tech • Blacksburg, VA",
+    "period": "2016 — 2019",
+    "bullets": [
+      "Worked on predictive maintenance problems to forecast when and where items would need to be replaced.",
+      "Applied data-driven approaches to analyze maintenance patterns and improve operational efficiency."
+    ],
+    "tags": ["Data Analytics", "Data Science", "Predictive Maintenance"],
+    "logo": "logos/vt.png",
+    "current": false
   }
 ]
 
