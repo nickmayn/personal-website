@@ -1810,50 +1810,99 @@
       Jul:6, Aug:7, Sep:8, Sept:8, Oct:9, Nov:10, Dec:11
     };
     const now = new Date();
+    const MS_PER_YEAR = 365.25 * 24 * 3600 * 1000;
 
-    // Configurable start years for stats displayed on the About card
+    // Configurable minimum experience baselines for stats displayed on the About card
     const EXPERIENCE_START    = new Date(2018, 0, 1); // 8+ years of professional experience
-    const SOFTWARE_DEV_START  = new Date(2014, 0, 1); // 12+ years of software development
+    const SOFTWARE_DEV_START  = new Date(2016, 0, 1); // 10+ years of software development
+    const DATA_SCIENCE_START  = new Date(2018, 0, 1); // 8+ years of data science
+    const DATA_ENG_START      = new Date(2016, 0, 1); // 10+ years of data engineering
 
-    function parseDate(s) {
-      s = s.trim();
-      if (s === 'Present') return now;
-      const parts = s.split(/\s+/);
+    function parseDateToken(s, isEnd = false) {
+      const value = s.trim();
+      if (value === 'Present') return now;
+      if (/^\d{4}$/.test(value)) {
+        const year = parseInt(value, 10);
+        // Interpret a year-only end date as the start of the following year so the full year counts.
+        return new Date(year + (isEnd ? 1 : 0), 0, 1);
+      }
+      const parts = value.split(/\s+/);
       const mon = MONTH_MAP[parts[0]];
       const yr  = parseInt(parts[1], 10);
-      return new Date(yr, mon ?? 0, 1);
+      if (!Number.isInteger(yr) || mon === undefined) return new Date(NaN);
+      // Interpret an end month as the start of the next month so the named month counts in full.
+      return new Date(yr, mon + (isEnd ? 1 : 0), 1);
     }
 
     function parsePeriod(period) {
       // handles em-dash (—), en-dash (–), or hyphen
       const parts = period.split(/\s*[\u2014\u2013\-]\s*/);
-      if (parts.length < 2) return null;
-      return { start: parseDate(parts[0]), end: parseDate(parts[parts.length - 1]) };
+      if (parts.length === 1) {
+        const start = parseDateToken(parts[0], false);
+        const end = parseDateToken(parts[0], true);
+        return { start, end };
+      }
+      return {
+        start: parseDateToken(parts[0], false),
+        end: parseDateToken(parts[parts.length - 1], true)
+      };
     }
 
     function yearsDiff(start, end) {
-      return (end - start) / (365.25 * 24 * 3600 * 1000);
+      return (end - start) / MS_PER_YEAR;
     }
 
-    let dsMs = 0, deMs = 0;
+    function sumMergedDurations(intervals) {
+      if (!intervals.length) return 0;
+      const sorted = intervals
+        .map(({ start, end }) => ({ start: start.getTime(), end: end.getTime() }))
+        .sort((a, b) => a.start - b.start);
+      const merged = [sorted[0]];
+      for (let i = 1; i < sorted.length; i++) {
+        const current = sorted[i];
+        const last = merged[merged.length - 1];
+        if (current.start <= last.end) {
+          last.end = Math.max(last.end, current.end);
+        } else {
+          merged.push(current);
+        }
+      }
+      return merged.reduce((total, interval) => total + (interval.end - interval.start), 0);
+    }
+
+    function normalizeTag(tag) {
+      return String(tag || '').trim().toLowerCase();
+    }
+
+    function matchesExperience(job, tagName, titlePattern) {
+      const normalizedTagName = normalizeTag(tagName);
+      const tags = Array.isArray(job.tags) ? job.tags.map(normalizeTag) : [];
+      return tags.includes(normalizedTagName) || titlePattern.test(job.title || '');
+    }
+
+    const dsIntervals = [];
+    const deIntervals = [];
+    const DATA_SCIENTIST_TITLE = /data\s+scient/i;
+    const DATA_ENGINEER_TITLE = /data\s+engineer/i;
 
     jobs.forEach(job => {
       const p = parsePeriod(job.period || '');
       if (!p || isNaN(p.start) || isNaN(p.end)) return;
-      const ms = p.end - p.start;
-      if (/data.scient/i.test(job.title))   dsMs += ms;
-      if (/data.engineer/i.test(job.title)) deMs += ms;
+      if (matchesExperience(job, 'Data Science', DATA_SCIENTIST_TITLE)) dsIntervals.push(p);
+      if (matchesExperience(job, 'Data Engineering', DATA_ENGINEER_TITLE)) deIntervals.push(p);
     });
 
+    const dsMs = sumMergedDurations(dsIntervals);
+    const deMs = sumMergedDurations(deIntervals);
     const totalYrs = Math.floor(yearsDiff(EXPERIENCE_START, now));
     const swDevYrs = Math.floor(yearsDiff(SOFTWARE_DEV_START, now));
-    const dsYrs    = Math.floor(dsMs / (365.25 * 24 * 3600 * 1000));
-    const deYrs    = Math.floor(deMs / (365.25 * 24 * 3600 * 1000));
+    const dsYrs    = Math.max(Math.floor(dsMs / MS_PER_YEAR), Math.floor(yearsDiff(DATA_SCIENCE_START, now)));
+    const deYrs    = Math.max(Math.floor(deMs / MS_PER_YEAR), Math.floor(yearsDiff(DATA_ENG_START, now)));
 
     document.getElementById('stat-roles').textContent    = jobs.length;
     document.getElementById('stat-sw-yrs').textContent    = swDevYrs + '+';
     document.getElementById('stat-ds-yrs').textContent    = dsYrs + '+';
-    document.getElementById('stat-de-yrs').textContent    = '4+';
+    document.getElementById('stat-de-yrs').textContent    = deYrs + '+';
   }
 
   // ── Fetch and render career timeline ─────────────────────
