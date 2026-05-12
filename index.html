@@ -1829,7 +1829,7 @@
       const parts = value.split(/\s+/);
       const mon = MONTH_MAP[parts[0]];
       const yr  = parseInt(parts[1], 10);
-      if (!Number.isInteger(yr) || mon == null) return new Date(NaN);
+      if (!Number.isInteger(yr) || mon === undefined) return new Date(NaN);
       // Interpret an end month as the start of the next month so the named month counts in full.
       return new Date(yr, mon + (isEnd ? 1 : 0), 1);
     }
