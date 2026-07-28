@@ -1,16 +1,28 @@
 [
   {
-    "title": "Senior Data Engineer",
-    "company": "Iron Eagle X • Stuttgart, Germany",
-    "period": "Jan 2025 — Present",
+    "title": "Principal Software Engineer",
+    "company": "Iron Eagle X | GDIT • Stuttgart, Germany",
+    "period": "May 2026 — Present",
     "bullets": [
-      "Led design and delivery of mission applications; one nominated for a SOCOM innovation award.",
-      "Engineered cross-domain data pipelines enabling instantaneous movement across red and yellow enclaves.",
-      "Partnered with stakeholders to translate mission requirements into technical backlogs, clarify acceptance criteria, and align delivery schedules."
+      "Architected and implemented agentic orchestration systems to automate complex mission workflows and enable intelligent, multi-step decision pipelines.",
+      "Led full stack development on a mission platform serving 200+ daily hits across 600+ unique users.",
+      "Engineered cross-domain data pipelines enabling instantaneous movement across red and yellow enclaves."
     ],
-    "tags": ["Data Engineering", "Pipelines", "Mission Applications"],
+    "tags": ["Agentic AI", "Full Stack", "System Architecture", "Mission Applications"],
     "logo": "logos/ironeaglex.png",
     "current": true
+  },
+  {
+    "title": "Senior Full Stack Developer",
+    "company": "Iron Eagle X | GDIT • Stuttgart, Germany",
+    "period": "Jan 2025 — May 2026",
+    "bullets": [
+      "Led design and delivery of mission applications; one nominated for a SOCOM innovation award.",
+      "Partnered with stakeholders to translate mission requirements into technical backlogs and align delivery schedules."
+    ],
+    "tags": ["Full Stack", "React", "Python", "Mission Applications"],
+    "logo": "logos/ironeaglex.png",
+    "current": false
   },
   {
     "title": "Lead Data Engineer",
