@@ -2466,7 +2466,7 @@
       return `
         <div class="activity-rhythm-row">
           <span class="activity-rhythm-label">${label}</span>
-          <div class="activity-rhythm-track" role="meter" aria-label="${fullLabel} contributions" aria-valuemin="0" aria-valuemax="${Math.max(max, 1)}" aria-valuenow="${count}" aria-valuetext="${count} contribution${count !== 1 ? 's' : ''} on ${fullLabel}">
+          <div class="activity-rhythm-track" role="progressbar" aria-label="${fullLabel} contributions" aria-valuemin="0" aria-valuemax="${Math.max(max, 1)}" aria-valuenow="${count}" aria-valuetext="${count} contribution${count !== 1 ? 's' : ''} on ${fullLabel}">
             <div class="activity-rhythm-fill" data-pct="${pct.toFixed(1)}"></div>
           </div>
           <span class="activity-rhythm-value">${count}</span>
