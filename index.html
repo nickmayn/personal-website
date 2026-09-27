@@ -2462,7 +2462,7 @@
     const summaryEl = document.getElementById('activity-rhythm-summary');
     const max = Math.max(...totals, 0);
     const busiestDays = totals
-      .map((count, index) => count === max ? longLabels[index] : null)
+      .map((count, index) => max > 0 && count === max ? longLabels[index] : null)
       .filter(Boolean);
 
     if (max === 0) {
