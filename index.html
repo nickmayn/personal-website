@@ -2438,6 +2438,8 @@
     });
   }
 
+  let _activityRhythmMotionQuery = null;
+  let _activityRhythmMotionHandler = null;
   function renderContributionRhythm(dayCounts) {
     const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const longLabels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -2502,19 +2504,49 @@
 
     gridEl.replaceChildren(frag);
 
-    const fillBars = () => {
-      gridEl.querySelectorAll('.activity-rhythm-fill').forEach(el => {
-        el.style.width = `${el.dataset.pct}%`;
+    const bars = Array.from(gridEl.querySelectorAll('.activity-rhythm-fill'));
+    const applyBarMotion = (reduceMotion, animate) => {
+      bars.forEach(el => {
+        el.style.transition = reduceMotion ? 'none' : '';
+        if (animate) el.style.width = '0';
       });
+
+      const fillBars = () => {
+        bars.forEach(el => {
+          el.style.width = `${el.dataset.pct}%`;
+        });
+      };
+
+      if (animate) {
+        requestAnimationFrame(fillBars);
+      } else {
+        fillBars();
+      }
     };
 
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gridEl.querySelectorAll('.activity-rhythm-fill').forEach(el => {
-        el.style.transition = 'none';
-      });
-      fillBars();
-    } else {
-      requestAnimationFrame(fillBars);
+    if (_activityRhythmMotionQuery && _activityRhythmMotionHandler) {
+      if (_activityRhythmMotionQuery.removeEventListener) {
+        _activityRhythmMotionQuery.removeEventListener('change', _activityRhythmMotionHandler);
+      } else if (_activityRhythmMotionQuery.removeListener) {
+        _activityRhythmMotionQuery.removeListener(_activityRhythmMotionHandler);
+      }
+    }
+
+    const motionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    const reduceMotion = Boolean(motionQuery && motionQuery.matches);
+    applyBarMotion(reduceMotion, !reduceMotion);
+
+    if (motionQuery) {
+      _activityRhythmMotionQuery = motionQuery;
+      _activityRhythmMotionHandler = (event) => {
+        applyBarMotion(event.matches, false);
+      };
+
+      if (motionQuery.addEventListener) {
+        motionQuery.addEventListener('change', _activityRhythmMotionHandler);
+      } else if (motionQuery.addListener) {
+        motionQuery.addListener(_activityRhythmMotionHandler);
+      }
     }
   }
 
