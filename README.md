@@ -6,6 +6,7 @@ A personal portfolio site that fetches and showcases all public GitHub repositor
 
 - **Live project cards** — pulls repos from the GitHub API (with a static cache fallback) and renders them in a responsive grid
 - **Search & filter** — filter by language, sort by last-updated / stars / name / newest
+- **Contribution visualizations** — shows a 365-day contribution heatmap plus a weekday rhythm chart
 - **GitHub Pages hosting** — automatically deployed on every push to `main`
 - **Daily refresh** — a scheduled GitHub Action snapshots the latest repo data and re-deploys the site each morning at 06:00 UTC
 
