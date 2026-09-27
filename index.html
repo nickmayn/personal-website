@@ -2451,12 +2451,16 @@
     const gridEl = document.getElementById('activity-rhythm-grid');
     const summaryEl = document.getElementById('activity-rhythm-summary');
     const max = Math.max(...totals, 0);
-    const busiestIndex = totals.indexOf(max);
+    const busiestDays = totals
+      .map((count, index) => count === max ? longLabels[index] : null)
+      .filter(Boolean);
 
     if (max === 0) {
       summaryEl.textContent = 'No public contributions recorded yet.';
+    } else if (busiestDays.length === 1) {
+      summaryEl.textContent = `${busiestDays[0]} is your busiest day with ${max} contributions`;
     } else {
-      summaryEl.textContent = `${longLabels[busiestIndex]} is your busiest day with ${max} contributions`;
+      summaryEl.textContent = `${busiestDays.join(' and ')} are tied as your busiest days with ${max} contributions`;
     }
 
     const frag = document.createDocumentFragment();
