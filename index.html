@@ -925,6 +925,66 @@
     [data-theme="light"] .legend-cell[data-level="2"] { background: rgba(22,163,74,.45); }
     [data-theme="light"] .legend-cell[data-level="3"] { background: rgba(22,163,74,.70); }
     [data-theme="light"] .legend-cell[data-level="4"] { background: #16a34a; }
+    .activity-rhythm {
+      margin-top: 1.2rem;
+      padding: 1rem 1.1rem;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
+      border: 1px solid var(--border);
+    }
+    .activity-rhythm-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: .4rem 1rem;
+      align-items: baseline;
+      margin-bottom: .85rem;
+    }
+    .activity-rhythm-head h3 {
+      font-size: .95rem;
+      margin: 0;
+    }
+    .activity-rhythm-head p {
+      margin: 0;
+      font-size: .78rem;
+      color: var(--muted);
+    }
+    .activity-rhythm-grid {
+      display: grid;
+      gap: .55rem;
+    }
+    .activity-rhythm-row {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) auto;
+      gap: .65rem;
+      align-items: center;
+    }
+    .activity-rhythm-label,
+    .activity-rhythm-value {
+      font-size: .78rem;
+      color: var(--muted);
+    }
+    .activity-rhythm-label {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .activity-rhythm-track {
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(139,148,158,.16);
+      overflow: hidden;
+    }
+    .activity-rhythm-fill {
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .75s cubic-bezier(.16,1,.3,1);
+      box-shadow: 0 0 18px rgba(74,222,128,.2);
+    }
+    [data-theme="light"] .activity-rhythm-track {
+      background: rgba(17,17,17,.08);
+    }
 
     /* ── Organizations ── */
     .orgs-grid { display: flex; flex-wrap: wrap; gap: .75rem; }
@@ -1556,6 +1616,13 @@
           <span class="legend-cell" data-level="4"></span>
           <span class="legend-text">More</span>
         </div>
+      </div>
+      <div class="activity-rhythm" id="activity-rhythm" style="display:none">
+        <div class="activity-rhythm-head">
+          <h3>Contribution rhythm</h3>
+          <p id="activity-rhythm-summary"></p>
+        </div>
+        <div class="activity-rhythm-grid" id="activity-rhythm-grid"></div>
       </div>
     </section>
 
@@ -2265,6 +2332,7 @@
   async function fetchAndRenderActivity() {
     const statusEl = document.getElementById('activity-status');
     const outerEl  = document.getElementById('heatmap-outer');
+    const rhythmEl = document.getElementById('activity-rhythm');
     const summaryEl = document.getElementById('activity-summary');
     try {
       let dayCounts = null;
@@ -2308,8 +2376,10 @@
       summaryEl.textContent = `${total} contributions in the last 365 days`;
 
       renderHeatmap(dayCounts);
+      renderContributionRhythm(dayCounts);
       statusEl.style.display = 'none';
       outerEl.style.display  = 'block';
+      rhythmEl.style.display = 'block';
     } catch (_) {
       statusEl.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Could not load activity data.</p>';
     }
@@ -2365,6 +2435,48 @@
         span.style.left  = (LABEL_W + col * CELL_PX) + 'px';
         monthsEl.appendChild(span);
       }
+    });
+  }
+
+  function renderContributionRhythm(dayCounts) {
+    const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const longLabels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const totals = labels.map(() => 0);
+
+    Object.entries(dayCounts).forEach(([day, count]) => {
+      const weekday = new Date(`${day}T12:00:00`).getDay();
+      totals[weekday] += count;
+    });
+
+    const gridEl = document.getElementById('activity-rhythm-grid');
+    const summaryEl = document.getElementById('activity-rhythm-summary');
+    const max = Math.max(...totals, 0);
+    const busiestIndex = totals.indexOf(max);
+
+    if (max === 0) {
+      summaryEl.textContent = 'No public contributions recorded yet.';
+    } else {
+      summaryEl.textContent = `${longLabels[busiestIndex]} is your busiest day with ${max} contributions`;
+    }
+
+    gridEl.innerHTML = labels.map((label, index) => {
+      const count = totals[index];
+      const pct = max ? Math.max((count / max) * 100, count > 0 ? 8 : 0) : 0;
+      return `
+        <div class="activity-rhythm-row">
+          <span class="activity-rhythm-label">${label}</span>
+          <div class="activity-rhythm-track" aria-hidden="true">
+            <div class="activity-rhythm-fill" data-pct="${pct.toFixed(1)}"></div>
+          </div>
+          <span class="activity-rhythm-value">${count}</span>
+        </div>
+      `;
+    }).join('');
+
+    requestAnimationFrame(() => {
+      gridEl.querySelectorAll('.activity-rhythm-fill').forEach(el => {
+        el.style.width = `${el.dataset.pct}%`;
+      });
     });
   }
 
