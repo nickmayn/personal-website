@@ -2518,7 +2518,7 @@
       };
 
       if (animate) {
-        requestAnimationFrame(fillBars);
+        requestAnimationFrame(() => requestAnimationFrame(fillBars));
       } else {
         fillBars();
       }
