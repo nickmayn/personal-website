@@ -2459,19 +2459,36 @@
       summaryEl.textContent = `${longLabels[busiestIndex]} is your busiest day with ${max} contributions`;
     }
 
-    gridEl.innerHTML = labels.map((label, index) => {
+    const frag = document.createDocumentFragment();
+    labels.forEach((label, index) => {
       const count = totals[index];
       const pct = max ? Math.max((count / max) * 100, count > 0 ? 8 : 0) : 0;
-      return `
-        <div class="activity-rhythm-row">
-          <span class="activity-rhythm-label">${label}</span>
-          <div class="activity-rhythm-track" aria-hidden="true">
-            <div class="activity-rhythm-fill" data-pct="${pct.toFixed(1)}"></div>
-          </div>
-          <span class="activity-rhythm-value">${count}</span>
-        </div>
-      `;
-    }).join('');
+
+      const row = document.createElement('div');
+      row.className = 'activity-rhythm-row';
+
+      const labelEl = document.createElement('span');
+      labelEl.className = 'activity-rhythm-label';
+      labelEl.textContent = label;
+
+      const trackEl = document.createElement('div');
+      trackEl.className = 'activity-rhythm-track';
+      trackEl.setAttribute('aria-hidden', 'true');
+
+      const fillEl = document.createElement('div');
+      fillEl.className = 'activity-rhythm-fill';
+      fillEl.dataset.pct = pct.toFixed(1);
+      trackEl.appendChild(fillEl);
+
+      const valueEl = document.createElement('span');
+      valueEl.className = 'activity-rhythm-value';
+      valueEl.textContent = String(count);
+
+      row.append(labelEl, trackEl, valueEl);
+      frag.appendChild(row);
+    });
+
+    gridEl.replaceChildren(frag);
 
     requestAnimationFrame(() => {
       gridEl.querySelectorAll('.activity-rhythm-fill').forEach(el => {
