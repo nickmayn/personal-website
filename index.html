@@ -2502,11 +2502,20 @@
 
     gridEl.replaceChildren(frag);
 
-    requestAnimationFrame(() => {
+    const fillBars = () => {
       gridEl.querySelectorAll('.activity-rhythm-fill').forEach(el => {
         el.style.width = `${el.dataset.pct}%`;
       });
-    });
+    };
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gridEl.querySelectorAll('.activity-rhythm-fill').forEach(el => {
+        el.style.transition = 'none';
+      });
+      fillBars();
+    } else {
+      requestAnimationFrame(fillBars);
+    }
   }
 
   // ── Skills radar chart ────────────────────────────────────
