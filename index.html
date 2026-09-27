@@ -2442,6 +2442,10 @@
     const labels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const longLabels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const totals = labels.map(() => 0);
+    const formatDayList = (days) => {
+      if (days.length <= 2) return days.join(' and ');
+      return `${days.slice(0, -1).join(', ')}, and ${days[days.length - 1]}`;
+    };
 
     Object.entries(dayCounts).forEach(([day, count]) => {
       const weekday = new Date(`${day}T12:00:00`).getDay();
@@ -2460,7 +2464,7 @@
     } else if (busiestDays.length === 1) {
       summaryEl.textContent = `${busiestDays[0]} is your busiest day with ${max} contributions`;
     } else {
-      summaryEl.textContent = `${busiestDays.join(' and ')} are tied as your busiest days with ${max} contributions`;
+      summaryEl.textContent = `${formatDayList(busiestDays)} are tied as your busiest days with ${max} contributions`;
     }
 
     const frag = document.createDocumentFragment();
